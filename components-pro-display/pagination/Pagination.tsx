@@ -1,6 +1,8 @@
 import React, { ReactNode, useCallback, useMemo } from 'react';
 import classNames from 'classnames';
 import Icon from '../primitives/Icon';
+import Select from '../select/Select';
+import Option from '../select/Option';
 import useProPrefix from '../_util/useProPrefix';
 import Pager from './Pager';
 import { SizeChangerPosition } from './enum';
@@ -80,13 +82,6 @@ const Pagination: React.FunctionComponent<PaginationProps> = props => {
     [onChange, pageSize],
   );
 
-  const handlePageSizeChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      handleChange(1, Number(event.target.value));
-    },
-    [handleChange],
-  );
-
   const renderPager = useCallback(
     (pagerPage: number, type: PagerType, active = false, pagerDisabled = false) => (
       <Pager
@@ -103,6 +98,51 @@ const Pagination: React.FunctionComponent<PaginationProps> = props => {
     [disabled, handleChange, itemRender, prefixCls],
   );
 
+  const renderPagers = useCallback(
+    (pagerPage: number) => {
+      const bufferSize = 1;
+      const pagerList: ReactNode[] = [];
+      if (totalPage <= 3 + bufferSize * 2) {
+        for (let i = 1; i <= totalPage; i += 1) {
+          pagerList.push(renderPager(i, 'page', pagerPage === i));
+        }
+      } else {
+        let left = Math.max(1, pagerPage - bufferSize);
+        let right = Math.min(totalPage, pagerPage + bufferSize);
+        if (pagerPage - 1 <= bufferSize) {
+          right = 1 + bufferSize * 2;
+        }
+        if (totalPage - pagerPage <= bufferSize) {
+          left = totalPage - bufferSize * 2;
+        }
+        for (let i = left; i <= right; i += 1) {
+          pagerList.push(renderPager(i, 'page', pagerPage === i));
+        }
+        if (pagerPage - 1 >= bufferSize * 2 && pagerPage !== 1 + 2) {
+          pagerList.unshift(renderPager(Math.max(pagerPage - 5, 1), 'jump-prev'));
+        }
+        if (totalPage - pagerPage >= bufferSize * 2 && pagerPage !== totalPage - 2) {
+          pagerList.push(renderPager(Math.min(pagerPage + 5, totalPage), 'jump-next'));
+        }
+        if (left !== 1) {
+          pagerList.unshift(renderPager(1, 'page', pagerPage === 1));
+        }
+        if (totalPage > 1 && right !== totalPage) {
+          pagerList.push(renderPager(totalPage, 'page', pagerPage === totalPage));
+        }
+      }
+      return pagerList;
+    },
+    [renderPager, totalPage],
+  );
+
+  const handlePageSizeChange = useCallback(
+    (value: string | number) => {
+      handleChange(1, Number(value));
+    },
+    [handleChange],
+  );
+
   if (hideOnSinglePage && total <= pageSize) {
     return null;
   }
@@ -111,19 +151,23 @@ const Pagination: React.FunctionComponent<PaginationProps> = props => {
   const to = Math.min(pageSize * currentPage, total);
 
   const sizeChanger = showSizeChanger ? (
-    <select
-      key="size-changer"
-      className={`${prefixCls}-size-changer-native`}
-      value={String(pageSize)}
+    <Select
+      key="size-select"
+      isFlat
+      searchable={false}
+      className={`${prefixCls}-size-changer`}
       disabled={disabled}
       onChange={handlePageSizeChange}
+      value={String(pageSize)}
+      clearButton={false}
+      size="small"
     >
       {pageSizeOptions.map(option => (
-        <option key={option} value={option}>
+        <Option key={option} value={option}>
           {option}
-        </option>
+        </Option>
       ))}
-    </select>
+    </Select>
   ) : null;
 
   const sizeChangerNode = showSizeChanger ? (
@@ -139,19 +183,22 @@ const Pagination: React.FunctionComponent<PaginationProps> = props => {
     )
   ) : null;
 
+  const pagersNode = showPager ? renderPagers(currentPage) : null;
+  const isShowFirstAndLast = !showPager;
+
   return (
-    <nav className={classNames(prefixCls, className)}>
+    <nav className={classNames(prefixCls, `${prefixCls}-wrapper`, className)}>
       {sizeChangerPosition === SizeChangerPosition.left && sizeChangerNode}
       {showTotal && (
         <span key="total" className={`${prefixCls}-page-info`}>
           {from} - {to} / {total}
         </span>
       )}
-      {renderPager(1, 'first', false, currentPage === 1)}
+      {isShowFirstAndLast && renderPager(1, 'first', false, currentPage === 1)}
       {renderPager(currentPage - 1, 'prev', false, currentPage === 1)}
-      {showPager && renderPager(currentPage, 'page', true)}
+      {pagersNode}
       {renderPager(currentPage + 1, 'next', false, !hasNext)}
-      {renderPager(totalPage, 'last', false, !hasNext)}
+      {isShowFirstAndLast && renderPager(totalPage, 'last', false, !hasNext)}
       {sizeChangerPosition === SizeChangerPosition.right && sizeChangerNode}
     </nav>
   );

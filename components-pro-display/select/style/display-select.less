@@ -1,0 +1,187 @@
+@import '../../../components/style/themes/default';
+
+@pagination-size-changer-editable-border-color: #e6e6e6;
+@select-suffix-icon-width: 0.28rem;
+
+.@{c7n-pro-prefix}-select {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-height: 0.8rem;
+  margin: 0;
+  padding: @input-padding-vertical-base @input-padding-horizontal;
+  color: @input-color;
+  font-weight: @input-font-weight-base;
+  font-size: @font-size-sm;
+  line-height: @input-line-height-base;
+  background-color: @input-pro-bg;
+  background-image: none;
+  border: @border-width-base @border-style-base @input-border-color;
+  border-radius: @input-border-radius;
+  cursor: text;
+  transition-duration: @animation-duration-slow;
+  transition-property: opacity, color, background-color, border;
+
+  &-prefix,
+  &-suffix,
+  &-inner-button {
+    position: absolute;
+    top: 0.01rem;
+    bottom: 0.01rem;
+    z-index: 1;
+    height: @input-suffix-height;
+    margin: auto 0;
+    line-height: 1;
+    text-align: center;
+  }
+
+  &-prefix,
+  &-suffix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-prefix {
+    left: 0.01rem;
+    width: @input-suffix-width-base;
+    color: @input-prefix-color;
+  }
+
+  &-suffix {
+    right: 0.01rem;
+    width: @input-suffix-width-base;
+    color: @input-suffix-color;
+  }
+
+  &-suffix-button &-suffix {
+    cursor: pointer;
+  }
+
+  &-inner-button {
+    right: 0.01rem;
+    width: @input-button-width;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity @animation-duration-slow;
+  }
+}
+
+.@{c7n-pro-prefix}-select-wrapper {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  vertical-align: middle;
+  padding: 0;
+  overflow: visible;
+  background-color: @input-wrapper-bg;
+  border-radius: @input-wrapper-border-radius;
+
+  && {
+    padding: 0;
+    position: relative;
+    overflow: visible;
+  }
+
+  label {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    padding: 0;
+    min-height: auto;
+  }
+
+  && label {
+    position: relative;
+    padding: 0;
+    z-index: 1;
+
+    .@{c7n-pro-prefix}-select {
+      border-radius: @input-border-radius;
+      height: @input-height-base;
+      border: @border-width-base @border-style-base @border-color-base;
+    }
+
+    .@{c7n-pro-prefix}-select:not(textarea):not(.react-codemirror2):not(:last-child) {
+      padding-right: @select-suffix-icon-width;
+    }
+
+    .@{c7n-pro-prefix}-select-suffix,
+    .@{c7n-pro-prefix}-select-prefix,
+    .@{c7n-pro-prefix}-input-number-inner-button {
+      z-index: 6;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      margin: auto 0;
+      line-height: 1;
+      text-align: center;
+    }
+
+    &:hover .@{c7n-pro-prefix}-select-inner-button,
+    > div:not([class*='CodeMirror']) {
+      z-index: 6;
+    }
+
+    input,
+    > span {
+      padding-top: 0;
+      padding-bottom: 0;
+      z-index: 5;
+      border-radius: @input-border-radius;
+      font-size: @font-size-sm;
+      color: fade(#000, 85%);
+    }
+  }
+
+  &&&-suffix-button,
+  &&&-prefix-button {
+    .@{c7n-pro-prefix}-select-suffix,
+    .@{c7n-pro-prefix}-select-prefix {
+      width: @select-suffix-icon-width;
+    }
+  }
+
+  &&&-suffix-button .@{c7n-pro-prefix}-select-suffix {
+    cursor: pointer;
+  }
+
+  &:not(.@{c7n-pro-prefix}-select-disabled):hover .@{c7n-pro-prefix}-select-suffix .icon,
+  &.@{c7n-pro-prefix}-select-focused .@{c7n-pro-prefix}-select-suffix .icon {
+    color: @input-suffix-hover-color;
+  }
+
+  .@{c7n-pro-prefix}-select-dropdown-menu {
+    position: absolute;
+    z-index: @zindex-dropdown;
+    top: 100%;
+    left: 0;
+    min-width: 100%;
+    margin-top: 0.04rem;
+  }
+}
+
+.@{c7n-pro-prefix}-select-flat:not(.@{c7n-pro-prefix}-select-range):not([class*='-textarea']) > label,
+.@{c7n-pro-prefix}-select-flat.@{c7n-pro-prefix}-select-multiple:not([class*='-textarea']) > label {
+  min-height: auto;
+
+  .@{c7n-pro-prefix}-select {
+    width: auto;
+  }
+}
+
+.@{c7n-pro-prefix}-select-sm.@{c7n-pro-prefix}-select-wrapper {
+  font-size: @font-size-sm;
+  border-radius: @input-border-radius;
+
+  .@{c7n-pro-prefix}-select {
+    height: @input-height-sm;
+    padding: @input-padding-vertical-sm @input-padding-horizontal;
+  }
+}
+
+.@{c7n-pro-prefix}-select-border {
+  .@{c7n-pro-prefix}-select {
+    border-style: @border-style-base;
+  }
+}

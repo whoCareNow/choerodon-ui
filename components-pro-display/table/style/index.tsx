@@ -7,5 +7,5 @@ import '../../../components-pro/field/style/index.less';
 import '../../../components-pro/table/style/index.less';
 import '../../../components-pro/table/query-bar/style/index.less';
 import '../../../components-pro/text-field/style/index.less';
-import '../../../components-pro/pagination/style/index.less';
+import '../../pagination/style';
 import './query-bar-form.less';

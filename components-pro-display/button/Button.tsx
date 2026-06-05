@@ -2,6 +2,7 @@ import React, {
   Children,
   cloneElement,
   CSSProperties,
+  isValidElement,
   MouseEvent,
   ReactNode,
   useCallback,
@@ -16,7 +17,6 @@ import isString from 'lodash/isString';
 import isFunction from 'lodash/isFunction';
 import isPromise from 'is-promise';
 import omit from 'lodash/omit';
-import { isFragment as isReactFragment } from 'react-is';
 import { useDisplayConfig } from '../_util/DisplayConfigContext';
 import Icon from '../primitives/Icon';
 import Progress from '../primitives/Progress';
@@ -67,7 +67,7 @@ function insertSpace(child: React.ReactChild, needInserted: boolean) {
   if (typeof child === 'string') {
     return isTwoCNChar(child) ? <span>{child.split('').join(SPACE)}</span> : <span>{child}</span>;
   }
-  if (isReactFragment(child)) {
+  if (isValidElement(child) && child.type === React.Fragment) {
     return <span>{child}</span>;
   }
   return child;
@@ -213,16 +213,16 @@ const Button: React.FunctionComponent<ButtonProps> = props => {
   );
 
   const childrenCount = Children.count(children);
-  const classString = classNames(prefixCls, className, {
+  const isIconOnlyChild =
+    childrenCount === 1 &&
+    isValidElement(children) &&
+    (children.type as { __C7N_ICON?: boolean }).__C7N_ICON;
+  const classString = classNames(`${prefixCls}-wrapper`, prefixCls, className, {
     [`${prefixCls}-${funcType}`]: funcType,
     [`${prefixCls}-${color}`]: color,
-    [`${prefixCls}-icon-only`]:
-      icon &&
-      (childrenCount === 0 ||
-        children === false ||
-        (childrenCount === 1 &&
-          (children as React.ReactElement).type &&
-          (children as any).type.__C7N_ICON)),
+    [`${prefixCls}-icon-only`]: icon
+      ? childrenCount === 0 || children === false
+      : isIconOnlyChild,
     [`${prefixCls}-block`]: block,
     [`${prefixCls}-loading`]: loading,
     [`${prefixCls}-two-chinese-chars`]: hasTwoCNChar && autoInsertSpace,
