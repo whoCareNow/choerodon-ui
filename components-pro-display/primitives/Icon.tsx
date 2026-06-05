@@ -22,6 +22,8 @@ const Icon: React.FunctionComponent<IconProps> = ({ type, className, style, titl
   );
 };
 
+(Icon as React.FunctionComponent<IconProps> & { __C7N_ICON?: boolean }).__C7N_ICON = true;
+
 Icon.displayName = 'DisplayIcon';
 
 export default Icon;

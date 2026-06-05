@@ -9,6 +9,8 @@ export interface DisplayConfig {
   buttonFuncType?: string;
   buttonColor?: string;
   autoInsertSpaceInButton?: boolean;
+  /** 是否开启按钮水波纹，默认 true */
+  ripple?: boolean;
 }
 
 const config: Required<Pick<DisplayConfig, 'prefixCls' | 'proPrefixCls' | 'iconfontPrefix'>> &

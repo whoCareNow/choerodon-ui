@@ -1,0 +1,50 @@
+@import '../../../components/style/themes/default';
+
+@btn-prefix-cls: ~'@{c7n-pro-prefix}-btn';
+@display-primary-color: #0840f8;
+@display-primary-hover-bg: color(~`colorPalette('@{display-primary-color}', 7) `);
+
+// Pro raised 按钮：无 material 阴影，以描边区分层级
+.@{btn-prefix-cls} {
+  font-family: @font-family;
+  font-size: @font-size-sm;
+  font-weight: @btn-font-weight;
+  box-shadow: none;
+
+  &:focus-visible:not(&-loading) {
+    box-shadow: none;
+  }
+
+  &:not(&-disabled):not(&-loading):active {
+    box-shadow: none;
+  }
+
+  &-raised {
+    border-width: @border-width-base;
+  }
+}
+
+// 与 Pro primary raised 一致：rgb(8, 64, 248)
+.@{btn-prefix-cls}-primary.@{btn-prefix-cls}-raised {
+  color: rgb(255, 255, 255);
+  background-color: rgb(8, 64, 248);
+  border-color: rgb(8, 64, 248);
+
+  &:not(.@{btn-prefix-cls}-loading):focus-visible {
+    color: rgb(255, 255, 255);
+    background-color: @display-primary-hover-bg;
+    border-color: @display-primary-hover-bg;
+  }
+
+  &:not(.@{btn-prefix-cls}-disabled):not(.@{btn-prefix-cls}-loading):hover {
+    color: rgb(255, 255, 255);
+    background-color: @display-primary-hover-bg;
+    border-color: @display-primary-hover-bg;
+  }
+
+  &:disabled,
+  &.@{btn-prefix-cls}-disabled,
+  &.@{btn-prefix-cls}-loading {
+    color: rgb(255, 255, 255);
+  }
+}

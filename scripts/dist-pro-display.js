@@ -41,7 +41,12 @@ const configs = getWebpackConfig(false)
     if (!config.entry || !config.entry[PRO_DISPLAY_ENTRY]) {
       return null;
     }
-    injectLessVariables(config, { 'c7n-root-entry-name': 'defaultVars' });
+    injectLessVariables(config, {
+      'c7n-root-entry-name': 'defaultVars',
+      'primary-color': '#0840f8',
+      'blue-6': '#0840f8',
+      'info-color': '#0840f8',
+    });
     return {
       ...config,
       entry: {

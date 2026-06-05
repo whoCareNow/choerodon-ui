@@ -20,6 +20,7 @@ import { isFragment as isReactFragment } from 'react-is';
 import { useDisplayConfig } from '../_util/DisplayConfigContext';
 import Icon from '../primitives/Icon';
 import Progress from '../primitives/Progress';
+import Ripple from '../primitives/Ripple';
 import useProPrefix from '../_util/useProPrefix';
 import { ButtonColor, ButtonTooltip, ButtonType, FuncType, WaitType } from './enum';
 
@@ -122,8 +123,7 @@ const Button: React.FunctionComponent<ButtonProps> = props => {
 
   const funcType = funcTypeProp ?? (getConfig('buttonFuncType') as FuncType) ?? FuncType.raised;
   const color = colorProp ?? (getConfig('buttonColor') as ButtonColor) ?? ButtonColor.default;
-  const disabled = disabledProp;
-  const autoInsertSpace = getConfig('autoInsertSpaceInButton') !== false;
+  const isDisabled = !!disabledProp || loading;
 
   useEffect(() => {
     setLoading(!!loadingProp);
@@ -184,7 +184,7 @@ const Button: React.FunctionComponent<ButtonProps> = props => {
 
   const fixTwoCNChar = useCallback(() => {
     const el = elementRef.current;
-    if (!el || !autoInsertSpace) {
+    if (!el || getConfig('autoInsertSpaceInButton') === false) {
       return;
     }
     const buttonText = el.textContent;
@@ -195,13 +195,14 @@ const Button: React.FunctionComponent<ButtonProps> = props => {
     } else {
       setHasTwoCNChar(false);
     }
-  }, [autoInsertSpace, children, funcType, icon]);
+  }, [children, funcType, getConfig, icon]);
 
   useEffect(() => {
     fixTwoCNChar();
   });
 
   const tooltip = tooltipProp ?? getTooltip('button');
+  const autoInsertSpace = getConfig('autoInsertSpaceInButton') !== false;
 
   const isNeedInserted = useMemo(
     () =>
@@ -225,13 +226,20 @@ const Button: React.FunctionComponent<ButtonProps> = props => {
     [`${prefixCls}-block`]: block,
     [`${prefixCls}-loading`]: loading,
     [`${prefixCls}-two-chinese-chars`]: hasTwoCNChar && autoInsertSpace,
-    [`${prefixCls}-disabled`]: disabled || loading,
+    [`${prefixCls}-disabled`]: isDisabled,
   });
+
+  const iconHiddenStyle: CSSProperties = {
+    color: 'transparent',
+    backgroundColor: 'transparent',
+    transition: 'none',
+    position: 'absolute',
+  };
 
   const buttonIcon = (
     <>
-      {icon && <Icon type={icon} style={loading ? { color: 'transparent', position: 'absolute' } : {}} />}
-      {loading && <Progress type="loading" size="small" />}
+      {icon && <Icon type={icon} style={loading ? iconHiddenStyle : {}} />}
+      {loading && <Progress key="loading" type="loading" size="small" />}
     </>
   );
 
@@ -243,10 +251,11 @@ const Button: React.FunctionComponent<ButtonProps> = props => {
     hidden,
     target: href ? target : undefined,
     type: href ? undefined : type,
-    href: href && !disabled && !loading ? href : undefined,
+    href: href && !isDisabled ? href : undefined,
+    disabled: isDisabled || undefined,
   };
 
-  if (!disabled && !loading) {
+  if (!isDisabled) {
     cmpProps.onClick = handleClickIfBubble;
   }
   if (onMouseEnter) {
@@ -267,12 +276,37 @@ const Button: React.FunctionComponent<ButtonProps> = props => {
       : null;
   const hasString = Children.toArray(children).some(child => isString(child));
 
+  const tooltipWrapper = isDisabled && !href && (onMouseEnter || onMouseLeave);
+  const omits: string[] = [];
+  if (tooltipWrapper) {
+    omits.push('className', 'style', 'hidden');
+  }
+  if (href) {
+    omits.push('type');
+  }
+
   const button = (
-    <Cmp {...omit(cmpProps, [])}>
-      {buttonIcon}
-      {hasString ? <span>{kids}</span> : kids}
-    </Cmp>
+    <Ripple disabled={isDisabled || funcType === FuncType.link}>
+      <Cmp {...omit(cmpProps, omits)}>
+        {buttonIcon}
+        {hasString ? <span>{kids}</span> : kids}
+      </Cmp>
+    </Ripple>
   );
+
+  if (tooltipWrapper) {
+    return (
+      <span
+        className={classNames(classString, `${prefixCls}-disabled-wrapper`)}
+        style={style}
+        hidden={hidden}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+      >
+        {button}
+      </span>
+    );
+  }
 
   return button;
 };
