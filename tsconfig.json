@@ -37,17 +37,32 @@
       "choerodon-ui/shared": [
         "./components-shared/index"
       ],
+      "choerodon-ui/pro-display/lib/*": [
+        "./components-pro-display/*"
+      ],
+      "choerodon-ui/pro-display": [
+        "./components-pro-display/index"
+      ],
       "axios": [
         "./components-dataset/axios/_helpers/axios.d.ts"
       ]
     }
   },
+  "include": [
+    "components/**/*",
+    "components-pro/**/*",
+    "components-pro-display/**/*",
+    "components-dataset/**/*",
+    "components-shared/**/*",
+    "typings/**/*"
+  ],
   "exclude": [
     "node_modules",
     "pro",
     "lib",
     "es",
     "dataset",
-    "shared"
+    "shared",
+    "pro-display"
   ]
 }

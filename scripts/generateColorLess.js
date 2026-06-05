@@ -5,6 +5,7 @@ const path = require('path');
 const glob = require('glob');
 const postcss = require('postcss');
 const less = require('less');
+const NpmImportPlugin = require('less-plugin-npm-import');
 
 const COLOR_MAP = {
   '#e6f7ff': 'color(~`colorPalette("@{primary-color}", 1)`)', // @primary-1
@@ -62,7 +63,9 @@ styles.forEach((style) => {
 content += `@import "${path.join(c7n, 'site/theme/static/index.less')}";\n`;
 
 less.render.call(less, content, {
-  paths: [path.join(c7n, 'components/style')],
+  paths: [path.join(c7n, 'node_modules'), path.join(c7n, 'components/style')],
+  javascriptEnabled: true,
+  plugins: [new NpmImportPlugin({ prefix: '~' })],
 }).then(({ css }) => {
   return postcss([
     reducePlugin,
@@ -89,4 +92,7 @@ less.render.call(less, content, {
     fs.mkdirSync(siteDir);
   }
   fs.writeFileSync(path.resolve(__dirname, '../_site/color.less'), css);
+}).catch((err) => {
+  console.error(err);
+  process.exit(1);
 });

@@ -148,6 +148,11 @@ export default class Header extends React.Component {
             <FormattedMessage id="app.header.menu.pro-components" />
           </Link>
         </Menu.Item>
+        <Menu.Item key="components-pro-display">
+          <Link to={utils.getLocalizedPathname('/components-pro-display/table/', isZhCN)}>
+            <FormattedMessage id="app.header.menu.pro-display" />
+          </Link>
+        </Menu.Item>
       </Menu>,
     ];
 

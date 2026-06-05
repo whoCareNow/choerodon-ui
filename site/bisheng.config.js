@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const CSSSplitWebpackPlugin = require('css-split-webpack-plugin').default;
 const babelOptions = require('bisheng/lib/config/getBabelCommonConfig').default();
@@ -29,6 +30,7 @@ module.exports = {
   source: {
     components: './components',
     'components-pro': './components-pro',
+    'components-pro-display': './components-pro-display',
     docs: './docs',
     changelog: ['CHANGELOG.zh-CN.md', 'CHANGELOG.en-US.md'],
   },
@@ -45,6 +47,7 @@ module.exports = {
       Patterns: 3,
       其他: 6,
       Other: 6,
+      'Pro Display': 98,
       'Pro Components': 99,
       Components: 100,
     },
@@ -82,16 +85,31 @@ module.exports = {
     // },
   },
   webpackConfig(config) {
+    const projectRoot = path.resolve(__dirname, '..');
+    const reactRouterCandidates = [
+      path.join(projectRoot, 'node_modules/react-router/lib/index.js'),
+      path.join(projectRoot, 'node_modules/bisheng/node_modules/react-router/lib/index.js'),
+    ];
+    const reactRouterEntry = reactRouterCandidates.find(candidate => fs.existsSync(candidate));
     config.resolve.alias = {
       'choerodon-ui/dataset': path.resolve('components-dataset'),
       'choerodon-ui/shared': path.resolve('components-shared'),
       'choerodon-ui/pro/lib': path.resolve('components-pro'),
       'choerodon-ui/pro': path.resolve('index-pro'),
+      'choerodon-ui/pro-display/lib': path.resolve('components-pro-display'),
+      'choerodon-ui/pro-display': path.resolve('index-pro-display'),
       'choerodon-ui/lib': path.resolve('components'),
       'choerodon-ui': path.resolve('index'),
       site: path.resolve('site'),
-      'react-router': 'react-router/umd/ReactRouter',
     };
+    if (reactRouterEntry) {
+      config.resolve.alias['react-router'] = reactRouterEntry;
+    }
+    config.resolve.modules = [
+      path.join(projectRoot, 'node_modules'),
+      'node_modules',
+    ];
+    config.resolve.symlinks = true;
 
     config.externals = {
       'react-router-dom': 'ReactRouterDOM',

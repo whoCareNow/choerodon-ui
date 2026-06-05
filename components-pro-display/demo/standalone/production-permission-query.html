@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pro Display UMD — 生产权限查询</title>
+  <link rel="stylesheet" href="../../../dist/choerodon-ui-pro-display.min.css" />
+  <style>
+    body { margin: 0; padding: 24px; background: #f5f5f5; font-family: sans-serif; }
+    h1 { font-size: 18px; margin: 0 0 8px; }
+    .hint { color: rgba(0,0,0,.45); margin: 0 0 16px; line-height: 1.6; max-width: 720px; }
+    #root { background: #fff; padding: 16px; border-radius: 2px; }
+    .pager { margin-top: 12px; color: rgba(0,0,0,.45); }
+    .pager button { margin-left: 8px; }
+    .field-input { width: 100%; height: 32px; padding: 4px 11px; border: 1px solid #d9d9d9; border-radius: 2px; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+  <h1>Pro Display UMD Demo</h1>
+  <p class="hint">
+    纯 HTML + UMD，无需 React 工程。请先执行 <code>npm run dist:pro-display</code> 生成
+    <code>dist/choerodon-ui-pro-display.min.js</code>。建议用本地静态服务打开（如
+    <code>npx serve .</code>），避免 <code>file://</code> 限制。
+  </p>
+  <div id="root"></div>
+
+  <script crossorigin src="https://unpkg.com/react@16.14.0/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16.14.0/umd/react-dom.production.min.js"></script>
+  <script src="../../../dist/choerodon-ui-pro-display.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+
+  <script type="text/babel">
+    const { Button, Form, Table } = window['choerodon-ui/pro-display'];
+    const { useCallback, useMemo, useState } = React;
+
+    const PAGE_SIZE = 10;
+    const MOCK_ALL = [
+      {
+        permissionId: 1027001,
+        formFactor: '111',
+        type: '2',
+        roleCode: 'businessManager',
+        roleName: '业务管理员',
+        enableFlagMeaning: '是',
+        creationDate: '2026-03-24 19:49:46',
+        lastUpdateDate: '2026-04-27 10:51:25',
+      },
+      {
+        permissionId: 1027002,
+        formFactor: '111',
+        type: '2',
+        roleCode: 'planner',
+        roleName: '计划员',
+        enableFlagMeaning: '是',
+        creationDate: '2026-03-20 10:00:00',
+        lastUpdateDate: '2026-04-01 09:30:00',
+      },
+      {
+        permissionId: 1027003,
+        formFactor: '112',
+        type: '2',
+        roleCode: 'businessManager',
+        roleName: '业务管理员',
+        enableFlagMeaning: '否',
+        creationDate: '2026-02-15 14:20:00',
+        lastUpdateDate: '2026-03-10 11:00:00',
+      },
+    ];
+
+    function mockQuery(page, size, body) {
+      const list = MOCK_ALL.filter(row => {
+        if (body.formFactor && row.formFactor !== body.formFactor) return false;
+        if (body.type && row.type !== body.type) return false;
+        if (body.roleName && row.roleName.indexOf(body.roleName) < 0) return false;
+        return true;
+      });
+      const totalElements = list.length;
+      const totalPages = totalElements === 0 ? 0 : Math.ceil(totalElements / size);
+      const number = totalPages === 0 ? 0 : Math.min(page, totalPages - 1);
+      const start = number * size;
+      const content = list.slice(start, start + size);
+      return { success: true, rows: { totalElements, totalPages, number, content } };
+    }
+
+    function App() {
+      const [formFactor, setFormFactor] = useState('111');
+      const [type, setType] = useState('2');
+      const [roleName, setRoleName] = useState('业务管理员');
+      const [page, setPage] = useState(0);
+      const [loading, setLoading] = useState(false);
+
+      const initial = mockQuery(0, PAGE_SIZE, { formFactor: '111', type: '2', roleName: '业务管理员' });
+      const [dataSource, setDataSource] = useState(initial.rows.content);
+      const [pager, setPager] = useState({
+        totalElements: initial.rows.totalElements,
+        totalPages: initial.rows.totalPages,
+        number: initial.rows.number,
+      });
+
+      const defaultQueryBody = { formFactor: '111', type: '2', roleName: '业务管理员' };
+
+      const runQuery = useCallback((nextPage, bodyOverride) => {
+        setLoading(true);
+        const body = bodyOverride || {
+          formFactor: formFactor.trim(),
+          type: type.trim(),
+          roleName: roleName.trim(),
+        };
+        const res = mockQuery(nextPage == null ? 0 : nextPage, PAGE_SIZE, body);
+        if (res.success) {
+          setDataSource(res.rows.content);
+          setPager({
+            totalElements: res.rows.totalElements,
+            totalPages: res.rows.totalPages,
+            number: res.rows.number,
+          });
+          setPage(res.rows.number);
+        }
+        setLoading(false);
+      }, [formFactor, type, roleName]);
+
+      const queryFields = useMemo(() => [
+        <Form.Item key="formFactor" label="formFactor">
+          <input className="field-input" value={formFactor} onChange={e => setFormFactor(e.target.value)} />
+        </Form.Item>,
+        <Form.Item key="type" label="type">
+          <input className="field-input" value={type} onChange={e => setType(e.target.value)} />
+        </Form.Item>,
+        <Form.Item key="roleName" label="roleName">
+          <input className="field-input" value={roleName} onChange={e => setRoleName(e.target.value)} />
+        </Form.Item>,
+      ], [formFactor, type, roleName]);
+
+      const columns = useMemo(() => [
+        { title: '权限ID', dataIndex: 'permissionId', width: 100 },
+        { title: 'formFactor', dataIndex: 'formFactor', width: 100 },
+        { title: 'type', dataIndex: 'type', width: 72 },
+        { title: '角色编码', dataIndex: 'roleCode' },
+        { title: '角色名称', dataIndex: 'roleName' },
+        { title: '是否启用', dataIndex: 'enableFlagMeaning', width: 88 },
+        { title: '创建时间', dataIndex: 'creationDate', width: 168 },
+        { title: '更新时间', dataIndex: 'lastUpdateDate', width: 168 },
+      ], []);
+
+      const summaryBar = (
+        <span className="pager">
+          共 {pager.totalElements} 条，第 {pager.totalPages ? pager.number + 1 : 0} / {pager.totalPages || 0} 页
+          <Button disabled={pager.number <= 0} onClick={() => runQuery(page - 1)}>上一页</Button>
+          <Button disabled={pager.totalPages === 0 || pager.number >= pager.totalPages - 1} onClick={() => runQuery(page + 1)}>下一页</Button>
+        </span>
+      );
+
+      return (
+        <Table
+          queryBar="professionalBar"
+          queryFields={queryFields}
+          queryFieldsLimit={3}
+          buttons={[<Button key="refresh" onClick={() => runQuery(page)}>刷新</Button>]}
+          summaryBar={summaryBar}
+          columns={columns}
+          dataSource={dataSource}
+          rowKey="permissionId"
+          loading={loading}
+          bordered
+          onQuery={() => runQuery(0)}
+          onReset={() => {
+            setFormFactor(defaultQueryBody.formFactor);
+            setType(defaultQueryBody.type);
+            setRoleName(defaultQueryBody.roleName);
+            runQuery(0, defaultQueryBody);
+          }}
+          autoQueryAfterReset={false}
+        />
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>

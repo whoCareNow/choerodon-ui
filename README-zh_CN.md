@@ -53,6 +53,7 @@ import 'choerodon-ui/dist/choerodon-ui-pro.css'; // or 'choerodon-ui/dist/choero
 - [脚手架市场](http://scaffold.ant.design)
 - [React 底层基础组件](http://react-component.github.io/)
 - [定制主题](https://open-hand.github.io/choerodon-ui/docs/react/customize-theme-cn)
+- [项目结构说明](docs/react/project-structure.zh-CN.md)
 
 ## 本地开发
 
@@ -61,6 +62,16 @@ $ git clone https://github.com/open-hand/choerodon-ui.git
 $ cd choerodon-ui
 $ npm install
 $ npm start
+```
+
+Node.js 17+（含 22）需使用项目脚本中的 `NODE_OPTIONS=--openssl-legacy-provider`（已写入 `npm start`），因文档站基于 Webpack 4。也可改用 Node 16 LTS。
+
+若使用 **pnpm**，请先删除 `node_modules` 后重新安装（项目根目录已配置 `.npmrc` 的 `shamefully-hoist`，否则文档站编译可能报大量模块找不到）：
+
+```bash
+rm -rf node_modules
+pnpm install
+npm start
 ```
 
 ## 部署

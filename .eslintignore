@@ -25,6 +25,7 @@ typings
 es/**/*
 lib/**/*
 pro/**/*
+pro-display/**/*
 dataset/**/*
 shared/**/*
 node_modules

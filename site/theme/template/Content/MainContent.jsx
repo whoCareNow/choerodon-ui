@@ -34,6 +34,8 @@ function getModuleDataByCategory(props) {
       return picked.components.filter(cmp => cmp.meta.category === 'Components');
     case 'components-pro':
       return picked.components.filter(cmp => cmp.meta.category === 'Pro Components');
+    case 'components-pro-display':
+      return picked.components.filter(cmp => cmp.meta.category === 'Pro Display');
     case 'docs/react':
     case 'changelog':
     case 'changelog-cn':

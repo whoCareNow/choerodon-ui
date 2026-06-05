@@ -91,6 +91,8 @@ function getWebpackConfig(modules) {
         [`${pkg.name}/shared`]: getProjectPath('components-shared'),
         [`${pkg.name}/pro/lib`]: getProjectPath('components-pro'),
         [`${pkg.name}/pro`]: getProjectPath('index-pro'),
+        [`${pkg.name}/pro-display/lib`]: getProjectPath('components-pro-display'),
+        [`${pkg.name}/pro-display`]: getProjectPath('index-pro-display'),
         [`${pkg.name}/lib`]: getProjectPath('components'),
         [pkg.name]: process.cwd(),
       },
@@ -242,6 +244,7 @@ ${pkg.name} v${pkg.version}
   if (process.env.RUN_ENV === 'PRODUCTION') {
     const entry = ['./index'];
     const entryPro = ['./index-pro'];
+    const entryProDisplay = ['./index-pro-display'];
     const entryDemoDataMock = ['./site/theme/mock/browser-online-demo'];
 
     // Common config
@@ -282,6 +285,7 @@ ${pkg.name} v${pkg.version}
       entry: {
         [pkg.name]: entry,
         [`${pkg.name}-pro`]: entryPro,
+        [`${pkg.name}-pro-display`]: entryProDisplay,
         [`${pkg.name}-demo-data-mock`]: entryDemoDataMock,
       },
       mode: 'development',
@@ -297,6 +301,7 @@ ${pkg.name} v${pkg.version}
       entry: {
         [`${pkg.name}.min`]: entry,
         [`${pkg.name}-pro.min`]: entryPro,
+        [`${pkg.name}-pro-display.min`]: entryProDisplay,
         [`${pkg.name}-demo-data-mock.min`]: entryDemoDataMock,
       },
       mode: 'production',

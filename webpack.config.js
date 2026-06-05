@@ -80,6 +80,10 @@ function processWebpackThemeConfig(themeConfig, theme, vars) {
       } else if (originPath.length === 1 && originPath[0] === './index-pro') {
         replacedPath = ['./index-pro-style-only'];
         config.entry[entryName.replace('choerodon-ui-pro', `choerodon-ui-pro.${theme}`)] = replacedPath;
+      } else if (originPath.length === 1 && originPath[0] === './index-pro-display') {
+        replacedPath = ['./index-pro-display-style-only'];
+        config.entry[entryName.replace('choerodon-ui-pro-display', `choerodon-ui-pro-display.${theme}`)] =
+          replacedPath;
       } else {
         // eslint-disable-next-line no-console
         console.log(chalk.yellow('🆘 There are other entries here: '), originPath[0]);
@@ -102,6 +106,11 @@ function processWebpackThemeConfig(themeConfig, theme, vars) {
             `choerodon-ui-pro.${theme}.min.js`,
             `choerodon-ui-pro.${theme}.min.js.LICENSE.txt`,
             `choerodon-ui-pro.${theme}.min.js.map`,
+            `choerodon-ui-pro-display.${theme}.js`,
+            `choerodon-ui-pro-display.${theme}.js.map`,
+            `choerodon-ui-pro-display.${theme}.min.js`,
+            `choerodon-ui-pro-display.${theme}.min.js.LICENSE.txt`,
+            `choerodon-ui-pro-display.${theme}.min.js.map`,
             `choerodon-ui.${theme}.js`,
             `choerodon-ui.${theme}.js.map`,
             `choerodon-ui.${theme}.min.js`,
@@ -137,6 +146,10 @@ if (process.env.RUN_ENV === 'PRODUCTION') {
           {
             from: /choerodon-ui-pro(-with-locales(\.min)?)/gi,
             to: 'choerodon-ui/pro',
+          },
+          {
+            from: /choerodon-ui-pro-display(\.min)?/gi,
+            to: 'choerodon-ui/pro-display',
           },
         ];
         compiler.hooks.compilation.tap('compilation', compilation => {

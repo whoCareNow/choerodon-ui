@@ -14,6 +14,7 @@ export default {
     'app.header.menu.doc': 'Document',
     'app.header.menu.components': 'Components',
     'app.header.menu.pro-components': 'Pro Components',
+    'app.header.menu.pro-display': 'Pro Display',
     'app.header.lang': '中文',
     'app.content.edit-page': 'Edit this page on GitHub!',
     'app.component.examples': 'Examples',

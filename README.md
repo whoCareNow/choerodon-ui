@@ -53,6 +53,7 @@ See [i18n](https://open-hand.github.io/choerodon-ui/en/docs/other/i18n).
 - [Scaffold Market](http://scaffold.ant.design)
 - [rc-components](http://react-component.github.io/)
 - [Customize Theme](https://open-hand.github.io/choerodon-ui/customize-theme)
+- [Project Structure](docs/react/project-structure.en-US.md)
 
 ## Local Development
 

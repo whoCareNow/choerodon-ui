@@ -27,6 +27,7 @@ dist
 /lib
 /es
 /pro
+/pro-display
 /dataset
 /shared
 /public
@@ -65,3 +66,4 @@ components/rc-components/tree/**/*.js
 components/form/__tests__/type.js
 site/theme/mock/performance-data/*.js
 .eslintcache
+lib/

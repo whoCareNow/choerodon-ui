@@ -99,6 +99,10 @@ module.exports = {
         component: contentTmpl,
       },
       {
+        path: 'components-pro-display/:children/',
+        component: contentTmpl,
+      },
+      {
         path: 'docs/spec/feature',
         component: redirectTmpl,
       },

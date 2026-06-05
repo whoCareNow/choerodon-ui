@@ -30,6 +30,9 @@ const esProDir = path.join(cwd, 'pro', 'es');
 const datasetDir = path.join(cwd, 'dataset');
 const datasetAxiosHelpersDir = path.join(cwd, 'dataset', 'axios', '_helpers');
 const sharedDir = path.join(cwd, 'shared');
+const proDisplayDir = path.join(cwd, 'pro-display');
+const libProDisplayDir = path.join(cwd, 'pro-display', 'lib');
+const esProDisplayDir = path.join(cwd, 'pro-display', 'es');
 
 const packageJson = require(`${cwd}/package.json`);
 
@@ -170,6 +173,11 @@ function compileDataset() {
   tsResult.on('end', check);
 
   return merge2([babelify(tsResult.js), tsResult.dts]);
+}
+
+function compileProDisplay(modules) {
+  const source = ['components-pro-display/**/*.tsx', 'components-pro-display/**/*.ts'];
+  return babelify(gulp.src(source), modules);
 }
 
 function compilePro(modules) {
@@ -421,6 +429,20 @@ gulp.task('compile-with-shared', done => {
     .on('finish', done);
 });
 
+gulp.task('compile-with-pro-display-lib', done => {
+  rimraf.sync(libProDisplayDir);
+  compileProDisplay()
+    .pipe(gulp.dest(libProDisplayDir))
+    .on('finish', done);
+});
+
+gulp.task('compile-with-pro-display-es', done => {
+  rimraf.sync(esProDisplayDir);
+  compileProDisplay(false)
+    .pipe(gulp.dest(esProDisplayDir))
+    .on('finish', done);
+});
+
 gulp.task('compile-with-rc-es', done => {
   compileRc(false)
     .pipe(changePath(esProDir, proName, true))
@@ -444,6 +466,8 @@ gulp.task(
     'compile-with-pro-lib',
     'compile-with-dataset',
     'compile-with-shared',
+    'compile-with-pro-display-lib',
+    'compile-with-pro-display-es',
     'compile-with-rc-es',
     'compile-with-rc-lib',
   ),

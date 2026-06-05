@@ -100,3 +100,4 @@ import 'choerodon-ui/dist/choerodon-ui.css';  // or 'choerodon-ui/dist/choerodon
 - [Ant Design](http://ant.design/)
 - [rc-components](http://react-component.github.io/)
 - [Customize Theme](/docs/react/customize-theme)
+- [Project Structure](/docs/react/project-structure)
