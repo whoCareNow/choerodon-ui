@@ -81,3 +81,4 @@ npx serve .
 | UMD | `dist/choerodon-ui-pro-display.min.js`（`npm run dist:pro-display`） |
 | 入口 | `index-pro-display.js` |
 | 文档站 demo | `components-pro-display/**/demo/*.md`（`npm start`） |
+| **实现程度说明** | [IMPLEMENTATION.md](./IMPLEMENTATION.md) |
