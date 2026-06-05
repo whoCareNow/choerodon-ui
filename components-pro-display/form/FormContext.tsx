@@ -10,6 +10,8 @@ export interface FormContextValue {
   useColon?: boolean;
   requiredMarkAlign?: RequiredMarkAlign;
   disabled?: boolean;
+  columns?: number;
+  useTableLayout?: boolean;
 }
 
 const FormContext = createContext<FormContextValue>({
@@ -19,6 +21,8 @@ const FormContext = createContext<FormContextValue>({
   useColon: false,
   requiredMarkAlign: RequiredMarkAlign.left,
   disabled: false,
+  columns: 1,
+  useTableLayout: false,
 });
 
 export default FormContext;

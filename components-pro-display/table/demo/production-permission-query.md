@@ -15,8 +15,7 @@ Mock query demo for production permission API using pro-display `Table` and prof
 
 ```jsx
 import React, { useCallback, useMemo, useState } from 'react';
-import { Button, Form, Table } from 'choerodon-ui/pro-display';
-import Input from 'choerodon-ui/lib/input';
+import { Button, Table, TextField } from 'choerodon-ui/pro-display';
 
 const PAGE_SIZE = 10;
 
@@ -140,15 +139,9 @@ function App() {
 
   const queryFields = useMemo(
     () => [
-      <Form.Item key="formFactor" label="formFactor">
-        <Input value={formFactor} onChange={e => setFormFactor(e.target.value)} />
-      </Form.Item>,
-      <Form.Item key="type" label="type">
-        <Input value={type} onChange={e => setType(e.target.value)} />
-      </Form.Item>,
-      <Form.Item key="roleName" label="roleName">
-        <Input value={roleName} onChange={e => setRoleName(e.target.value)} />
-      </Form.Item>,
+      <TextField key="formFactor" label="formFactor" value={formFactor} onChange={e => setFormFactor(e.target.value)} />,
+      <TextField key="type" label="type" value={type} onChange={e => setType(e.target.value)} />,
+      <TextField key="roleName" label="roleName" value={roleName} onChange={e => setRoleName(e.target.value)} />,
     ],
     [formFactor, type, roleName],
   );

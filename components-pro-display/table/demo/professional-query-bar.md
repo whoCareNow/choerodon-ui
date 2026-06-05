@@ -7,16 +7,15 @@ title:
 
 ## zh-CN
 
-展示版专业搜索条，样式与 Pro Table `queryBar="professionalBar"` 一致，不依赖 DataSet。通过 `queryFields` 传入 `Form.Item` 与受控输入，在 `onQuery` / `onReset` 中自行请求数据。
+展示版专业搜索条，样式与 Pro Table `queryBar="professionalBar"` 一致，不依赖 DataSet。通过 `queryFields` 传入带 `label` 的 `TextField`，在 `onQuery` / `onReset` 中自行请求数据。
 
 ## en-US
 
-Display professional query bar with the same styles as Pro Table `professionalBar`, without DataSet. Pass `Form.Item` fields via `queryFields` and load data in `onQuery` / `onReset`.
+Display professional query bar with the same styles as Pro Table `professionalBar`, without DataSet. Pass labeled `TextField` via `queryFields` and load data in `onQuery` / `onReset`.
 
 ```jsx
 import React, { useCallback, useMemo, useState } from 'react';
-import { Button, Form, Table } from 'choerodon-ui/pro-display';
-import Input from 'choerodon-ui/lib/input';
+import { Button, Table, TextField } from 'choerodon-ui/pro-display';
 
 const allData = [
   { id: '1', name: '张三', age: 28 },
@@ -31,15 +30,9 @@ function App() {
 
   const queryFields = useMemo(
     () => [
-      <Form.Item key="name" label="姓名">
-        <Input value={name} onChange={e => setName(e.target.value)} placeholder="姓名" />
-      </Form.Item>,
-      <Form.Item key="age" label="年龄">
-        <Input value={age} onChange={e => setAge(e.target.value)} placeholder="年龄" />
-      </Form.Item>,
-      <Form.Item key="extra" label="备注" hidden={false}>
-        <Input placeholder="展开后可见" />
-      </Form.Item>,
+      <TextField key="name" label="姓名" value={name} onChange={e => setName(e.target.value)} placeholder="姓名" />,
+      <TextField key="age" label="年龄" value={age} onChange={e => setAge(e.target.value)} placeholder="年龄" />,
+      <TextField key="extra" label="备注" placeholder="展开后可见" />,
     ],
     [name, age],
   );

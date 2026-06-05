@@ -1,0 +1,30 @@
+@import '../../../components/style/themes/default';
+
+.@{c7n-pro-prefix}-pagination {
+  &-size-changer-native {
+    height: @input-height-base;
+    margin: @pagination-size-changer-margin;
+    padding: 0 0.08rem;
+    color: @text-color;
+    font-size: @font-size-base;
+    line-height: @input-height-base;
+    background-color: @component-background;
+    border: @border-width-base @border-style-base @input-border-color;
+    border-radius: @input-border-radius;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      border-color: @input-hover-border-color;
+    }
+
+    &:focus {
+      border-color: @input-focus-border-color;
+    }
+
+    &:disabled {
+      color: @disabled-color;
+      cursor: not-allowed;
+    }
+  }
+}

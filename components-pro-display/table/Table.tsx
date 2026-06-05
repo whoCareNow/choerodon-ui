@@ -5,6 +5,7 @@ import Spin from '../primitives/Spin';
 import { useDisplayConfig } from '../_util/DisplayConfigContext';
 import useProPrefix from '../_util/useProPrefix';
 import ProfessionalQueryBar from './query-bar/ProfessionalQueryBar';
+import Pagination from '../pagination/Pagination';
 import { TableProps } from './interface';
 
 function getCellValue<T>(record: T, dataIndex?: string): any {
@@ -33,6 +34,7 @@ function getRowKey<T>(record: T, index: number, rowKey?: string | ((record: T, i
 
 export interface DisplayTableType extends React.FunctionComponent<TableProps> {
   ProfessionalBar: typeof ProfessionalQueryBar;
+  QueryBar: typeof ProfessionalQueryBar;
 }
 
 const Table: DisplayTableType = <T,>(props: TableProps<T>) => {
@@ -58,6 +60,7 @@ const Table: DisplayTableType = <T,>(props: TableProps<T>) => {
     onBeforeQuery,
     onQuery,
     onReset,
+    pagination,
   } = props;
 
   const { getConfig } = useDisplayConfig();
@@ -173,6 +176,12 @@ const Table: DisplayTableType = <T,>(props: TableProps<T>) => {
           </div>
         </div>
       </div>
+      {pagination !== false && pagination && (
+        <Pagination
+          {...pagination}
+          className={classNames(`${prefixCls}-pagination`, pagination.className)}
+        />
+      )}
     </div>
   );
 
@@ -185,5 +194,6 @@ const Table: DisplayTableType = <T,>(props: TableProps<T>) => {
 
 Table.displayName = 'DisplayTable';
 Table.ProfessionalBar = ProfessionalQueryBar;
+Table.QueryBar = ProfessionalQueryBar;
 
 export default Table;

@@ -3,17 +3,24 @@ import { LabelWidth } from './FormContext';
 
 export const FIELD_SUFFIX = 'field';
 
-export function normalizeLabelWidth(labelWidth: LabelWidth | undefined): (number | 'auto')[] {
+export function normalizeLabelWidth(
+  labelWidth: LabelWidth | undefined,
+  columns = 1,
+): (number | 'auto')[] {
   if (!labelWidth) {
-    return [100];
+    return Array.from({ length: columns }, () => 100);
   }
   if (Array.isArray(labelWidth)) {
-    return labelWidth;
+    const result = [...labelWidth];
+    while (result.length < columns) {
+      result.push(result[result.length - 1] ?? 100);
+    }
+    return result.slice(0, columns);
   }
   if (typeof labelWidth === 'number' || labelWidth === 'auto') {
-    return [labelWidth];
+    return Array.from({ length: columns }, () => labelWidth);
   }
-  return [100];
+  return Array.from({ length: columns }, () => 100);
 }
 
 export function getRequiredMarkAlign(align?: RequiredMarkAlign): RequiredMarkAlign {

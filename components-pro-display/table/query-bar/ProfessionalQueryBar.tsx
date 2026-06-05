@@ -15,6 +15,8 @@ import useProPrefix from '../../_util/useProPrefix';
 import Button from '../../button';
 import { ButtonColor, FuncType } from '../../button/enum';
 import Form, { FormProps } from '../../form';
+import Item from '../../form/Item';
+import DisplayTextField from '../../text-field/TextField';
 import { LabelLayout } from '../../form/enum';
 import TableButtons from './TableButtons';
 
@@ -39,14 +41,36 @@ export interface ProfessionalQueryBarProps {
   className?: string;
 }
 
+function wrapTextFieldWithFormItem(element: ReactElement): ReactElement {
+  const type = element.type as { displayName?: string };
+  if (type !== DisplayTextField && type.displayName !== 'DisplayTextField') {
+    return element;
+  }
+  const { label, hidden, ...fieldProps } = element.props as {
+    label?: ReactNode;
+    hidden?: boolean;
+    [key: string]: unknown;
+  };
+  if (label == null || label === '') {
+    return element;
+  }
+  return (
+    <Item key={element.key} label={label} hidden={hidden}>
+      {cloneElement(element, { ...fieldProps, label: undefined })}
+    </Item>
+  );
+}
+
 function normalizeQueryFields(queryFields?: ReactNode[]): ReactElement[] {
   if (!queryFields) {
     return [];
   }
-  return queryFields.filter(
-    (field): field is ReactElement =>
-      isValidElement(field) && !(field.props as { hidden?: boolean }).hidden,
-  );
+  return queryFields
+    .filter(
+      (field): field is ReactElement =>
+        isValidElement(field) && !(field.props as { hidden?: boolean }).hidden,
+    )
+    .map(wrapTextFieldWithFormItem);
 }
 
 function injectEnterDown(elements: ReactElement[], onEnter: () => void): ReactElement[] {
@@ -142,6 +166,7 @@ const ProfessionalQueryBar: React.FunctionComponent<ProfessionalQueryBarProps> =
     return (
       <div key="query_bar" className={`${prefixCls}-professional-query-bar`}>
         <Form
+          columns={queryFieldsLimit}
           labelWidth={80}
           labelLayout={labelLayout}
           {...formProps}
