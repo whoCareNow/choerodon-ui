@@ -1,4 +1,4 @@
-import 'choerodon-ui/lib/style/index.less';
-import 'choerodon-ui/lib/grid/style';
-import 'choerodon-ui/pro/lib/form/style';
-import 'choerodon-ui/pro/lib/field/style';
+import '../../../components/style/index.less';
+import '../../../components/grid/style/index.less';
+import '../../../components-pro/form/style/index.less';
+import '../../../components-pro/field/style/index.less';

@@ -128,8 +128,9 @@ components-pro-display/
 | 命令 | 产物 | 状态 |
 |------|------|------|
 | `npm run compile`（含 pro-display 任务） | `pro-display/lib`、`pro-display/es` | ✅ |
-| `npm run dist:pro-display` | `dist/choerodon-ui-pro-display.min.js` + `.css` | ✅ 已单独验证 |
-| `npm run dist`（全量） | 含 pro-display UMD | ⚠️ 集成进主 dist，未在本期全量回归 |
+| `npm run dist:pro-display` | `dist/choerodon-ui-pro-display.min.js` + `.css` | ✅ |
+| UMD 全局名 | `window["choerodon-ui/pro-display"]` | ✅ 由 `output.library` 直接指定 |
+| HTML Demo 引导 | `demo/standalone/umd-boot.js` | ✅ 兼容旧版全局名 |
 | `npm start` | Bisheng 文档 `/components-pro-display/*` | ✅ |
 
 **入口文件：**
@@ -144,7 +145,7 @@ components-pro-display/
 | 项 | 现状 |
 |----|------|
 | 组件 TSX | 不 import `choerodon-ui/lib` 运行时 JS |
-| 样式 Less | **构建期** import `choerodon-ui/lib/style`、`choerodon-ui/pro/lib/*/style` |
+| 样式 Less | **构建期** import 各组件 `style/index.less`（相对路径，避免 babel-plugin-import 吞掉 Pro 样式） |
 | 字体 / 主题 | 依赖 choerodon-ui 主题与 iconfont |
 | 完全独立 CSS 包 | **未实现**（后续可抽离 Less 或预编译独立 CSS） |
 

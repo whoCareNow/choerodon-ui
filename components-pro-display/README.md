@@ -54,9 +54,10 @@ npm run dist:pro-display
 ### 3. 使用
 
 ```html
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="./dist/choerodon-ui-pro-display.min.js"></script>
+<script src="./components-pro-display/demo/standalone/umd-boot.js"></script>
 <script type="text/babel">
-  const { Button, Table, Form } = window['choerodon-ui/pro-display'];
+  const { Button, Table, Form } = getChoerodonProDisplay();
   // ReactDOM.render(...)
 </script>
 ```
