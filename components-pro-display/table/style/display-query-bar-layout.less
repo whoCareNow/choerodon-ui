@@ -3,6 +3,7 @@
 @table-prefix-cls: ~'@{c7n-pro-prefix}-table';
 @form-prefix-cls: ~'@{c7n-pro-prefix}-form';
 @field-prefix-cls: ~'@{c7n-pro-prefix}-field';
+@input-prefix-cls: ~'@{c7n-pro-prefix}-input';
 
 .@{table-prefix-cls}-professional-query-bar {
   align-items: flex-start;
@@ -12,8 +13,15 @@
     min-width: 0;
   }
 
-  .@{field-prefix-cls} {
-    display: block;
-    width: 100%;
+  .@{field-prefix-cls}-wrapper {
+    .@{input-prefix-cls}-wrapper {
+      width: 100%;
+    }
+  }
+
+  &-button {
+    > * + * {
+      margin-left: @btn-group-spacing;
+    }
   }
 }

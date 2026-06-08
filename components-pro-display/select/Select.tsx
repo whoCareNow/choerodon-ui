@@ -143,6 +143,7 @@ const Select: React.FunctionComponent<SelectProps> = props => {
       [`${prefixCls}-lg`]: size === 'large',
       [`${prefixCls}-empty`]: value === undefined || value === '',
       [`${prefixCls}-expand`]: open,
+      [`${prefixCls}-focused`]: open,
       [`${prefixCls}-disabled`]: disabled,
     },
     className,

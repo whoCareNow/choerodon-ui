@@ -1,7 +1,7 @@
 # components-pro-display 实现程度说明
 
-> 最后更新：2026-06-04  
-> 分支参考：`umd-build`（commit `8f18f2d4a` 及之后）
+> 最后更新：2026-06-05  
+> 分支参考：`umd-build`
 
 本文档记录 **Pro Display** 模块当前实现范围、完成度、已知限制与后续规划，便于评估能否用于 UMD / 纯 HTML 场景或 React 工程接入。
 
@@ -34,12 +34,13 @@ pie title 首期组件（3 个）
 | UMD 独立构建 | ✅ 完成 | `npm run dist:pro-display` |
 | Bisheng 文档站 | ✅ 完成 | 路由、菜单、3 组件 demo |
 | Standalone HTML Demo | ✅ 完成 | `demo/standalone/*.html` |
+| TextField / Select / Pagination / Icon | ✅ 完成 | 展示版 Field + 分页，无 DataSet |
+| 查询表单样式（ProfessionalQueryBar） | ✅ 完成 | DOM 对齐 Pro + field less 进 UMD CSS |
 | 单元测试 | ❌ 未做 | 无 `__tests__` |
-| Pro Field 系列（TextField 等） | ❌ 未做 | Demo 仍依赖 `choerodon-ui` 基础 Input |
 | 独立 CSS（不引用 choerodon-ui Less） | ❌ 未做 | 样式仍 `@import` Pro/base Less |
 | 真实 API 对接 Demo | ⚠️ 部分 | 有 curl 样例与 mock，HTML demo 未接真实接口 |
 
-**综合评估：首期「展示三件套 + UMD + 文档」约 85% 完成；Field 生态与样式完全独立为下一阶段。**
+**综合评估：展示组件 + UMD + 查询条视觉对齐约 90% 完成；样式完全独立与 Field 全量为下一阶段。**
 
 ---
 
@@ -77,9 +78,11 @@ pie title 首期组件（3 个）
 | disabled（上下文） | ✅ | ✅ | aria-disabled |
 | dataSet / record / fields | ✅ | ❌ | |
 | 校验 / 提交 / 联动 | ✅ | ❌ | |
-| 内置 Field 控件 | ✅ | ❌ | 子节点需自行传入（如 `choerodon-ui` Input） |
+| columns 多列 table 栅格 | ✅ | ✅ | QueryBar `columns={queryFieldsLimit}` |
+| 原生 input 自动包 Pro wrapper | ✅ | ✅ | `wrapNativeInput` |
+| 内置 Field 控件 | ✅ | ⚠️ 部分 | 提供 TextField；Select 为展示版 |
 
-**文件：** `form/Form.tsx`、`form/Item.tsx`、`form/FormContext.tsx`、`form/utils.ts`
+**文件：** `form/Form.tsx`、`form/Item.tsx`、`form/FormContext.tsx`、`form/utils.ts`、`form/wrapNativeInput.tsx`
 
 ---
 
@@ -97,7 +100,7 @@ pie title 首期组件（3 个）
 | 自定义 queryBar 节点 | ✅ | ✅ | |
 | Table.ProfessionalBar 单独导出 | ✅ | ✅ | |
 | 行内编辑 / 双击编辑 | ✅ | ❌ | |
-| 分页（Pagination） | ✅ | ❌ | HTML demo 手写简易翻页 |
+| 分页（Pagination） | ✅ | ✅ | Table `pagination` prop + 展示版 Pagination |
 | 排序 / 筛选 / 分组 | ✅ | ❌ | |
 | 虚拟滚动 / PerformanceTable | ✅ | ❌ | |
 | 树形 / 展开行 | ✅ | ❌ | |
@@ -117,6 +120,10 @@ components-pro-display/
 ├── primitives/      # Icon, Row, Col, Spin, Progress（替代 choerodon-ui/lib JS 引用）
 ├── button/
 ├── form/
+├── text-field/      # 展示版 TextField（QueryBar 查询项）
+├── select/          # 展示版 Select（分页 sizeChanger 等）
+├── pagination/
+├── icon/
 ├── table/
 ├── style/           # 聚合样式入口
 ├── demo/standalone/ # UMD 纯 HTML 示例
@@ -142,12 +149,33 @@ components-pro-display/
 
 ### 4.3 样式策略
 
+**原则：Pro Less 优先，DOM 对齐，极少 override。**
+
 | 项 | 现状 |
 |----|------|
-| 组件 TSX | 不 import `choerodon-ui/lib` 运行时 JS |
-| 样式 Less | **构建期** import 各组件 `style/index.less`（相对路径，避免 babel-plugin-import 吞掉 Pro 样式） |
-| 字体 / 主题 | 依赖 choerodon-ui 主题与 iconfont |
+| 组件 TSX | 不 import `choerodon-ui/lib` 运行时 JS（Icon 等为 display 轻量实现） |
+| 样式入口 | **构建期** import 对应 Pro 组件的 `components-pro/*/style/index.tsx`（完整依赖链：button、select、pagination 等） |
+| display 补丁 | Pro 完整 less + **排版补丁**：`display-button.less`、`display-select-layout.less`、`display-pagination-layout.less`、`display-query-bar-layout.less`、`display-icon.less`（无 Trigger/DataSet 时的结构覆盖） |
+| field 样式 | `form/style` 显式 import `components-pro/field/style/index.less`，保证 UMD CSS 含 `c7n-pro-field-label` 等 label 规则 |
+| 禁止做法 | 从 DevTools 复制 computed style 到 `display-*.less`；应查 Pro `style/index.tsx` + 测试快照 DOM |
+| 字体 / 主题 | 依赖 choerodon-ui 主题与 iconfont（`components/style` 编译进 UMD CSS） |
+| UMD 主题注入 | `scripts/dist-pro-display.js` 注入 `primary-color: #0840f8` 等 modifyVars |
 | 完全独立 CSS 包 | **未实现**（后续可抽离 Less 或预编译独立 CSS） |
+
+**样式入口示例：**
+
+```tsx
+// form/style/index.tsx — 查询条 label 间距依赖 field less
+import '../../../components-pro/field/style/index.less';
+import '../../../components-pro/form/style/index.less';
+
+// pagination/style/index.tsx
+import '../../../components-pro/pagination/style';
+
+// table/style/index.tsx
+import '../../../components-pro/table/query-bar/style';
+import './display-query-bar-layout.less';
+```
 
 ### 4.4 文档与示例
 
@@ -192,9 +220,9 @@ pro-display 适合：
 
 ### 6.1 当前限制
 
-1. **输入控件**：查询栏 Demo 使用 `choerodon-ui/lib/input` 或 HTML 原生 `<input>`，UMD 包内**不含** TextField / Select 等 Pro Field。
-2. **样式耦合**：UMD CSS 仍来自 choerodon-ui + pro Less 编译，非完全自包含设计令牌。
-3. **分页**：Table 无内置 Pagination；业务需自行渲染并更新 `dataSource`。
+1. **Field 能力**：TextField / Select 为展示版（无 DataSet），QueryBar 可自动包裹带 `label` 的 TextField。
+2. **样式耦合**：UMD CSS 编译自 Pro `style/index.tsx` + 极少 display 补丁，非完全自包含设计令牌。
+3. **分页**：Table 支持受控 `pagination` prop；Pagination / Select / Icon 已纳入 pro-display。
 4. **国际化**：ProfessionalQueryBar 按钮文案硬编码中文（重置 / 查询 / 更多）。
 5. **configureDisplay**：仅支持 prefixCls、proPrefixCls、iconfontPrefix、button 默认项等少量配置，无完整 `configure`  parity。
 6. **编译产物**：`pro-display/` 目录 gitignore，发布前需 `npm run compile`。
@@ -203,9 +231,7 @@ pro-display 适合：
 
 | 优先级 | 任务 |
 |--------|------|
-| P1 | 增加 TextField / Select 等**展示版 Field**（仍无 DataSet） |
-| P1 | Table 内置 Pagination 展示组件（受控 page/size/total） |
-| P2 | production-permission-query HTML 对接 `testTableCRUD.txt` 真实 API |
+| P1 | production-permission-query HTML 对接 `testTableCRUD.txt` 真实 API |
 | P2 | ProfessionalQueryBar  locale / 可配置文案 |
 | P3 | 样式抽离为独立 Less 包，减少对 `choerodon-ui/pro` 路径依赖 |
 | P3 | 单元测试与 demo 快照 |
@@ -242,12 +268,16 @@ npm start
 |------|------|
 | `Button` | 组件 |
 | `Form`（含 `Form.Item`） | 组件 |
-| `Table`（含 `Table.ProfessionalBar`） | 组件 |
-| `ProfessionalQueryBar` | 组件 |
+| `TextField` | 组件 |
+| `Select` | 组件 |
+| `Pagination` | 组件 |
+| `Icon` | 组件 |
+| `Table`（含 `Table.ProfessionalBar` / `Table.QueryBar`） | 组件 |
+| `ProfessionalQueryBar` / `QueryBar` | 组件 |
 | `TableButtons` | 组件 |
 | `configureDisplay` | 全局配置 |
-| `ColumnType`, `TableProps`, `TableQueryBarType` | 类型 |
-| `ProfessionalQueryBarProps`, `TableButtonsProps` | 类型 |
+| `ColumnType`, `TableProps`, `TableQueryBarType`, `TablePaginationConfig` | 类型 |
+| `TextFieldProps`, `PaginationProps`, `ProfessionalQueryBarProps` 等 | 类型 |
 
 UMD 全局命名空间：`window['choerodon-ui/pro-display']`
 
@@ -259,3 +289,24 @@ UMD 全局命名空间：`window['choerodon-ui/pro-display']`
 |------|------|
 | 2026-06-04 | 首期实现：Button / Form / Table + ProfessionalQueryBar + UMD + 文档站 + standalone demo；去除 DataSet/MobX 运行时依赖 |
 | 2026-06-04 | 新增本文档，记录实现程度 |
+| 2026-06-05 | **查询表单样式修复**：TextField `className`/`style` 合并到 `input-wrapper`；Form.Item table 模式对齐 Pro DOM（label 在 `<td>`、去掉多余 `span.c7n-pro-field`、table 路径移除 `-label-grid`）；新增 `display-query-bar-layout.less` |
+| 2026-06-05 | **UMD field 样式补全**：`form/style` 显式 import `field/style/index.less`，修复查询条 label 间距缺失（`c7n-pro-field-label` padding 未打进 CSS 包） |
+| 2026-06-05 | **样式策略收敛**：各组件 style 入口改回 import Pro `style/index.tsx` 完整链；删除冗余 `display-pagination-pager.less`、`display-select.less` 等手工覆盖，保留 `display-*-layout.less` 结构补丁 |
+| 2026-06-05 | **组件扩展**：TextField、Pagination、Select、Icon 纳入 pro-display；Pagination 对齐 Pro 分页窗口与 sizeChanger；Button 主色 `#0840f8` 与 UMD 渲染修复 |
+
+### 9.1 查询表单 DOM 目标（与 Pro professionalBar 一致）
+
+```html
+<td class="c7n-pro-field-label c7n-pro-field-label-right">
+  <label><span>label</span></label>
+</td>
+<td>
+  <div class="c7n-pro-field-wrapper">
+    <span class="c7n-pro-input-wrapper c7n-pro-input-border c7n-pro-field">
+      <label><input class="c7n-pro-input" /></label>
+    </span>
+  </div>
+</td>
+```
+
+QueryBar 右侧按钮区使用 Pro 类名 `c7n-pro-table-professional-query-bar-button`，顶对齐依赖 `@table-professional-query-button-padding` 与 field label/wrapper 的 `@label-wrapper-padding` / `@form-item-wrapper-padding` 一致。

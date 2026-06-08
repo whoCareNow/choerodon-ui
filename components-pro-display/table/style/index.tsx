@@ -1,11 +1,4 @@
-import '../../../components/style/index.less';
-import '../../../components/spin/style/index.less';
-import '../../../components/grid/style/index.less';
-import '../../../components-pro/button/style/index.less';
-import '../../../components-pro/form/style/index.less';
-import '../../../components-pro/field/style/index.less';
+import '../../../components-pro/table/query-bar/style';
 import '../../../components-pro/table/style/index.less';
-import '../../../components-pro/table/query-bar/style/index.less';
-import '../../../components-pro/text-field/style/index.less';
 import '../../pagination/style';
-import './query-bar-form.less';
+import './display-query-bar-layout.less';

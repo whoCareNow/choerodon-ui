@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { CSSProperties, ReactNode } from 'react';
 import classNames from 'classnames';
 
 export interface InputWrapperOptions {
@@ -7,6 +7,8 @@ export interface InputWrapperOptions {
   readOnly?: boolean;
   prefix?: ReactNode;
   suffix?: ReactNode;
+  className?: string;
+  style?: CSSProperties;
 }
 
 export function renderInputWrapper(
@@ -14,14 +16,15 @@ export function renderInputWrapper(
   input: ReactNode,
   options: InputWrapperOptions = {},
 ): ReactNode {
-  const { border = true, disabled, readOnly, prefix, suffix } = options;
+  const { border = true, disabled, readOnly, prefix, suffix, className, style } = options;
   return (
     <span
-      className={classNames(`${inputPrefixCls}-wrapper`, {
+      className={classNames(`${inputPrefixCls}-wrapper`, className, {
         [`${inputPrefixCls}-border`]: border,
         [`${inputPrefixCls}-disabled`]: disabled,
         [`${inputPrefixCls}-read-only`]: readOnly,
       })}
+      style={style}
     >
       <label>
         {prefix}

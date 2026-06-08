@@ -4,7 +4,6 @@ import React, {
   ReactNode,
   useCallback,
 } from 'react';
-import classNames from 'classnames';
 import omit from 'lodash/omit';
 import useProPrefix from '../_util/useProPrefix';
 import { renderInputWrapper } from './renderInputWrapper';
@@ -62,8 +61,7 @@ const TextField: React.FunctionComponent<TextFieldProps> = props => {
   const input = (
     <input
       {...omit(rest, ['onEnterDown'])}
-      className={classNames(prefixCls, className)}
-      style={style}
+      className={prefixCls}
       disabled={disabled}
       readOnly={readOnly}
       onKeyDown={handleKeyDown}
@@ -72,7 +70,15 @@ const TextField: React.FunctionComponent<TextFieldProps> = props => {
 
   return (
     <>
-      {renderInputWrapper(prefixCls, input, { border, disabled, readOnly, prefix, suffix })}
+      {renderInputWrapper(prefixCls, input, {
+        border,
+        disabled,
+        readOnly,
+        prefix,
+        suffix,
+        className,
+        style,
+      })}
     </>
   );
 };

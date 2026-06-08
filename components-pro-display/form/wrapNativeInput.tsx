@@ -9,6 +9,7 @@ import { renderInputWrapper } from '../text-field/renderInputWrapper';
 export default function wrapNativeInput(
   children: ReactNode,
   inputPrefixCls: string,
+  wrapperClassName?: string,
 ): ReactNode {
   if (!isValidElement(children) || children.type !== 'input') {
     return children;
@@ -21,5 +22,6 @@ export default function wrapNativeInput(
     border: true,
     disabled: inputProps.disabled,
     readOnly: inputProps.readOnly,
+    className: wrapperClassName,
   });
 }

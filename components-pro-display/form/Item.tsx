@@ -44,12 +44,32 @@ function Label(props: {
   );
 }
 
-function injectItemProps(children: ReactNode, inputPrefixCls: string, onEnterDown?: FormItemProps['onEnterDown']) {
-  let content = wrapNativeInput(children, inputPrefixCls);
-  if (onEnterDown && isValidElement(content)) {
+function injectItemProps(
+  children: ReactNode,
+  inputPrefixCls: string,
+  fieldPrefixCls: string,
+  useTableLayout: boolean,
+  onEnterDown?: FormItemProps['onEnterDown'],
+) {
+  const fieldClassName = useTableLayout ? fieldPrefixCls : undefined;
+  let content = wrapNativeInput(children, inputPrefixCls, fieldClassName);
+
+  if (isValidElement(content)) {
     const childType = content.type as { displayName?: string };
-    if (childType === DisplayTextField || childType.displayName === 'DisplayTextField') {
-      content = cloneElement(content, { onEnterDown });
+    const isTextField = childType === DisplayTextField || childType.displayName === 'DisplayTextField';
+    const extraProps: Record<string, unknown> = {};
+
+    if (onEnterDown && isTextField) {
+      extraProps.onEnterDown = onEnterDown;
+    }
+    if (useTableLayout && isTextField) {
+      extraProps.className = classNames(
+        fieldPrefixCls,
+        (content.props as { className?: string }).className,
+      );
+    }
+    if (Object.keys(extraProps).length) {
+      content = cloneElement(content, extraProps);
     }
   }
   return content;
@@ -100,8 +120,8 @@ const Item: React.FunctionComponent<FormItemProps> = props => {
   const prefixCls = useProPrefix(FIELD_SUFFIX);
   const inputPrefixCls = useProPrefix('input');
   const fieldContent = useMemo(
-    () => injectItemProps(children, inputPrefixCls, onEnterDown),
-    [children, inputPrefixCls, onEnterDown],
+    () => injectItemProps(children, inputPrefixCls, prefixCls, useTableLayout, onEnterDown),
+    [children, inputPrefixCls, prefixCls, useTableLayout, onEnterDown],
   );
   const fieldUseColon = itemUseColon !== undefined ? itemUseColon : useColon;
   const layout = itemLabelLayout !== undefined ? itemLabelLayout : labelLayout;
@@ -121,13 +141,18 @@ const Item: React.FunctionComponent<FormItemProps> = props => {
         ? undefined
         : columnLabelWidth;
 
-  const labelClassName = classNames(`${prefixCls}-label`, `${prefixCls}-label-grid`, `${prefixCls}-label-${labelAlign}`, {
-    [`${prefixCls}-required`]: required,
-    [`${prefixCls}-label-vertical`]: layout === LabelLayout.vertical,
-    [`${prefixCls}-label-useColon`]: label && fieldUseColon,
-    [`${prefixCls}-label-required-mark-${markAlign}`]:
-      layout === LabelLayout.horizontal && required,
-  });
+  const labelClassName = classNames(
+    `${prefixCls}-label`,
+    !useTableLayout && `${prefixCls}-label-grid`,
+    `${prefixCls}-label-${labelAlign}`,
+    {
+      [`${prefixCls}-required`]: required,
+      [`${prefixCls}-label-vertical`]: layout === LabelLayout.vertical,
+      [`${prefixCls}-label-useColon`]: label && fieldUseColon,
+      [`${prefixCls}-label-required-mark-${markAlign}`]:
+        layout === LabelLayout.horizontal && required,
+    },
+  );
 
   const wrapperClassName = classNames(`${prefixCls}-wrapper`, className);
 
@@ -149,11 +174,7 @@ const Item: React.FunctionComponent<FormItemProps> = props => {
           </label>
         </td>
         <td>
-          {renderFieldWrapper(
-            wrapperClassName,
-            disabled,
-            <span className={prefixCls}>{fieldContent}</span>,
-          )}
+          {renderFieldWrapper(wrapperClassName, disabled, fieldContent)}
         </td>
       </>
     );

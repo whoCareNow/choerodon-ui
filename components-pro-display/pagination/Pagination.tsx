@@ -187,7 +187,7 @@ const Pagination: React.FunctionComponent<PaginationProps> = props => {
   const isShowFirstAndLast = !showPager;
 
   return (
-    <nav className={classNames(prefixCls, `${prefixCls}-wrapper`, className)}>
+    <nav className={classNames(`${prefixCls}-wrapper`, prefixCls, className)}>
       {sizeChangerPosition === SizeChangerPosition.left && sizeChangerNode}
       {showTotal && (
         <span key="total" className={`${prefixCls}-page-info`}>
