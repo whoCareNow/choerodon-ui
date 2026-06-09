@@ -310,6 +310,7 @@
     "dist:pro-display": "cross-env NODE_OPTIONS=--openssl-legacy-provider RUN_ENV=PRODUCTION node ./scripts/dist-pro-display.js",
     "compile": "gulp compile",
     "tsc": "tsc",
+    "serve": "serve . -l 3100",
     "start": "rimraf _site && node ./scripts/generateColorLess.js && cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=development BROWSER=chrome bisheng start -c ./site/bisheng.config.js",
     "site": "rimraf _site && cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js",
     "site-with-test": "rimraf _site && cross-env NODE_OPTIONS=--openssl-legacy-provider NODE_ENV=production bisheng build --ssr -c ./site/bisheng.config.js && jest choerodon-ui --notify --config=.jest.js --no-cache --coverage",
