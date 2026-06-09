@@ -1,4 +1,5 @@
 import './index.less';
+import '../primitives/style';
 import '../icon/style';
 import '../button/style';
 import '../form/style';

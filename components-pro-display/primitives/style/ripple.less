@@ -1,0 +1,27 @@
+// Pro-Display Ripple styles — self-contained.
+// Derived from components/ripple/style/index.less.
+// Provides c7n-ripple and c7n-ripple-wrapper positioning.
+
+@import '../../style/themes/default';
+
+@ripple-prefix-cls: ~'@{c7n-prefix}-ripple';
+
+.@{ripple-prefix-cls} {
+  position: absolute;
+  background-color: @ripple-dark-color;
+  border-radius: 50%;
+  transition: all @animation-duration-slower cubic-bezier(0, 0, 0.2, 1);
+  pointer-events: none;
+
+  &-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    background-clip: padding-box;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+}

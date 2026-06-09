@@ -70,7 +70,10 @@
   outline: none;
   box-shadow: none;
   cursor: pointer;
-  transition: all @animation-duration-slow ease-out;
+  transition: background-color @animation-duration-slow ease-out,
+    color @animation-duration-slow ease-out,
+    border-color @animation-duration-slow ease-out,
+    box-shadow @animation-duration-slow ease-out;
   user-select: none;
   touch-action: manipulation;
 
