@@ -1,0 +1,8 @@
+// Pro-Display theme entry point.
+// This file routes between variable sources, similar to components/style/themes/default.less.
+// For pro-display we always use defaultVars (no CSS variable runtime theming).
+
+@iconfont: ~'~choerodon-ui-font';
+@import '@{iconfont}/style/theme';
+@import '../../../components/style/color/colors';
+@import './defaultVars.less';

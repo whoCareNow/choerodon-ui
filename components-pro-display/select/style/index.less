@@ -1,0 +1,310 @@
+// Pro-Display Select styles — self-contained.
+// Merges: components-pro/select/style/index.less + display-select-layout.less.
+// Provides wrapper/label/suffix/dropdown layout without TriggerField dependency.
+
+@import '../../style/themes/default';
+
+@select-prefix-cls: ~'@{c7n-pro-prefix}-select';
+@select-suffix-icon-width: 0.28rem;
+
+// ========== Dropdown menu ==========
+
+.@{select-prefix-cls}-dropdown-menu {
+  position: absolute;
+  z-index: @zindex-dropdown;
+  top: 100%;
+  left: 0;
+  min-width: 100%;
+  max-height: 2.5rem;
+  margin: 0.04rem 0 0;
+  padding: 0.04rem 0;
+  overflow: auto;
+  list-style: none;
+  background-color: @component-background;
+  border-radius: @border-radius-base;
+  box-shadow: @shadow-1-down;
+  outline: none;
+
+  &-item {
+    position: relative;
+    display: block;
+    padding: 0.05rem 0.12rem;
+    overflow: hidden;
+    color: @text-color;
+    font-weight: normal;
+    line-height: @line-height-base;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition: background @animation-duration-slow ease;
+
+    &:hover {
+      background-color: @item-hover-bg;
+    }
+
+    &-active {
+      background-color: @item-active-bg;
+      font-weight: 600;
+    }
+
+    &-selected {
+      background-color: @item-active-bg;
+      font-weight: 600;
+    }
+
+    &-disabled {
+      color: @disabled-color;
+      cursor: not-allowed;
+
+      &:hover {
+        color: @disabled-color;
+        background-color: @component-background;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &-group {
+    padding: 0;
+
+    &-title {
+      padding: 0.04rem 0.12rem;
+      color: @text-color-secondary;
+      font-size: @font-size-sm;
+    }
+  }
+}
+
+// ========== Select wrapper & layout (no TriggerField) ==========
+
+.@{select-prefix-cls} {
+  margin: 0;
+  border: @border-width-base @border-style-base @input-border-color;
+  border-radius: @input-border-radius;
+  background-color: transparent;
+  outline: none;
+  transition: border-color @animation-duration-slow;
+
+  &-trigger {
+    transition: transform @animation-duration-slow;
+  }
+
+  &-expand &-trigger {
+    transform: rotate(180deg);
+  }
+
+  &-wrapper {
+    position: relative;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    padding: 0;
+    overflow: visible;
+    background-color: @input-wrapper-bg;
+    border-radius: @input-wrapper-border-radius;
+
+    && {
+      padding: 0;
+      position: relative;
+      overflow: visible;
+    }
+
+    label {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      padding: 0;
+      min-height: auto;
+    }
+
+    && label {
+      position: relative;
+      padding: 0;
+      z-index: 1;
+
+      .@{select-prefix-cls}:not(textarea):not(.react-codemirror2):not(:last-child) {
+        padding-right: @select-suffix-icon-width;
+      }
+
+      .@{select-prefix-cls}-suffix,
+      .@{select-prefix-cls}-prefix,
+      .@{c7n-pro-prefix}-input-number-inner-button {
+        z-index: 6;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto 0;
+        line-height: 1;
+        text-align: center;
+      }
+
+      &:hover .@{select-prefix-cls}-inner-button,
+      > div:not([class*='CodeMirror']) {
+        z-index: 6;
+      }
+
+      input,
+      > span {
+        padding-top: 0;
+        padding-bottom: 0;
+        z-index: 5;
+        border-radius: @input-border-radius;
+        font-size: @font-size-sm;
+        color: fade(#000, 85%);
+      }
+    }
+
+    &&-suffix-button,
+    &&-prefix-button {
+      .@{select-prefix-cls}-suffix,
+      .@{select-prefix-cls}-prefix {
+        width: @select-suffix-icon-width;
+      }
+    }
+
+    &&-suffix-button .@{select-prefix-cls}-suffix {
+      cursor: pointer;
+    }
+
+    &:not(.@{select-prefix-cls}-disabled):hover .@{select-prefix-cls}-suffix .icon,
+    &.@{select-prefix-cls}-focused .@{select-prefix-cls}-suffix .icon,
+    &.@{select-prefix-cls}-expand .@{select-prefix-cls}-suffix .icon {
+      color: @input-suffix-hover-color;
+    }
+
+    .@{select-prefix-cls}-dropdown-menu {
+      position: absolute;
+      z-index: @zindex-dropdown;
+      top: 100%;
+      left: 0;
+      min-width: 100%;
+      margin-top: 0.04rem;
+    }
+  }
+
+  // rendered value
+  &-rendered-value {
+    &-inner {
+      display: inline-block;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  // flat
+  &-flat:not(.@{select-prefix-cls}-range):not([class*='-textarea']) > label,
+  &-flat.@{select-prefix-cls}-multiple:not([class*='-textarea']) > label {
+    min-height: auto;
+
+    .@{select-prefix-cls} {
+      width: auto;
+      border-color: transparent;
+      box-shadow: none;
+    }
+  }
+
+  // focus/hover border
+  &-focused .@{select-prefix-cls},
+  .@{select-prefix-cls}:focus {
+    border-color: @input-focus-border-color;
+    box-shadow: @input-active-box-shadow;
+  }
+
+  label:hover .@{select-prefix-cls},
+  .@{select-prefix-cls}:hover {
+    border-color: @input-hover-border-color;
+  }
+
+  &-disabled .@{select-prefix-cls} {
+    color: @disabled-color;
+    cursor: not-allowed;
+  }
+
+  // size: sm
+  &-sm&-wrapper {
+    font-size: @font-size-sm;
+    border-radius: @input-border-radius;
+
+    .@{select-prefix-cls} {
+      height: @input-height-sm;
+      padding: @input-padding-vertical-sm @input-padding-horizontal;
+    }
+  }
+
+  // size: lg
+  &-lg&-wrapper {
+    .@{select-prefix-cls} {
+      height: @input-height-lg;
+      padding: @input-padding-vertical-lg @input-padding-horizontal;
+    }
+  }
+
+  // trigger icon rotation
+  &-expand &-trigger {
+    transform: rotate(180deg);
+  }
+
+  // not editable
+  &-not-editable {
+    cursor: default;
+  }
+
+  // border
+  &-border & {
+    border-style: @border-style-base;
+  }
+
+  // clear button
+  &-clear-button {
+    background: transparent;
+  }
+
+  // disabled
+  &-disabled {
+    color: @disabled-color;
+    cursor: not-allowed;
+  }
+
+  // prefix / suffix
+  &-prefix,
+  &-suffix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-suffix {
+    right: 0.01rem;
+  }
+
+  &-prefix {
+    left: 0.01rem;
+  }
+
+  // popup
+  &-popup {
+    min-width: 0.5rem;
+  }
+
+  // search bar
+  &-search-bar {
+    padding: 0.04rem 0.1rem;
+  }
+
+  // multiple
+  &-multiple {
+    .@{select-prefix-cls} {
+      height: auto;
+    }
+  }
+}
+
+// Pagination size-changer within pagination context
+.@{c7n-pro-prefix}-pagination.@{c7n-pro-prefix}-pagination-wrapper {
+  .@{c7n-pro-prefix}-pagination-size-changer.@{c7n-pro-prefix}-select-wrapper {
+    .@{c7n-pro-prefix}-select {
+      height: 0.22rem;
+    }
+  }
+}

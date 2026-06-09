@@ -1,0 +1,32 @@
+// Pro-Display Icon styles — self-contained.
+// Provides iconfont base styles and icon alignment within buttons/selects.
+
+@import '../../style/themes/default';
+
+@iconfont-css-prefix: icon;
+
+// iconfont base
+.@{iconfont-css-prefix} {
+  display: inline-block;
+  font-style: normal;
+  vertical-align: -0.1em;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Icon alignment inside button
+.@{c7n-pro-prefix}-btn {
+  > .icon {
+    line-height: 1;
+  }
+}
+
+// Icon alignment inside select suffix/prefix
+.@{c7n-pro-prefix}-select-suffix,
+.@{c7n-pro-prefix}-select-prefix {
+  .icon {
+    font-size: inherit;
+    line-height: 1;
+  }
+}

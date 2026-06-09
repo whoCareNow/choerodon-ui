@@ -3,6 +3,9 @@ function camelCase(name) {
   return name.charAt(0).toUpperCase() + name.slice(1).replace(/-(\w)/g, (m, n) => n.toUpperCase());
 }
 
+// Global style entry (base reset, iconfont, motion, themes) — not matched by require.context below
+require('./components-pro-display/style');
+
 const req = require.context('./components-pro-display', true, /^\.\/[^_][\w-]+\/style\/index\.tsx?$/);
 
 req.keys().forEach(mod => {

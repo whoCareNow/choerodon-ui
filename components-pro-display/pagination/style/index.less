@@ -1,0 +1,138 @@
+// Pro-Display Pagination styles — self-contained.
+// Merges: components-pro/pagination/style/index.less + display-pagination-layout.less.
+// Provides pagination layout, pager button sizing, size changer, page info.
+
+@import '../../style/themes/default';
+
+@pagination-pager-btn-height: 0.24rem;
+@pagination-pager-btn-min-width: 0.24rem;
+@pagination-pager-btn-color: #595959;
+@pagination-pager-btn-border-color: #e6e6e6;
+@pagination-size-changer-editable-border-color: #e6e6e6;
+
+.@{c7n-pro-prefix}-pagination {
+  color: @pagination-color;
+  line-height: 0.3rem;
+
+  &&-wrapper {
+    > * {
+      vertical-align: middle;
+    }
+
+    .@{c7n-pro-prefix}-select-wrapper.@{c7n-pro-prefix}-select-suffix-button {
+      margin-left: 0.1rem;
+    }
+  }
+
+  > * {
+    vertical-align: middle;
+  }
+
+  &-perpage {
+    color: @text-color;
+    font-size: @font-size-base;
+    vertical-align: middle;
+  }
+
+  &-size-changer:not(&-size-editable) .@{c7n-pro-prefix}-select,
+  &-size-changer&-size-editable:not(:hover):not(:focus) .@{c7n-pro-prefix}-select:not(:hover):not(:focus) {
+    border-color: @pagination-size-changer-editable-border-color;
+  }
+
+  &&-wrapper &-size-changer&&-size-editable:not(:hover):not(:focus) .@{c7n-pro-prefix}-select:not(:hover):not(:focus) {
+    border-color: @pagination-size-changer-editable-border-color;
+  }
+
+  &-size-changer {
+    margin: @pagination-size-changer-margin;
+
+    + .@{c7n-pro-prefix}-btn-wrapper {
+      margin-left: 0.1rem;
+    }
+  }
+
+  &-page-info {
+    margin: 0 0.2rem;
+  }
+
+  &-pager {
+    min-width: @pagination-pager-min-width;
+    height: @pagination-pager-height;
+  }
+
+  // Pager button styling
+  &&-wrapper {
+    .@{c7n-pro-prefix}-select-wrapper.@{c7n-pro-prefix}-select-suffix-button > label {
+      min-height: auto;
+    }
+
+    .@{c7n-pro-prefix}-pagination-size-changer.@{c7n-pro-prefix}-select-wrapper {
+      padding: 0;
+      overflow: visible;
+      font-size: @font-size-sm;
+      background-color: @input-wrapper-bg;
+      border-radius: @input-border-radius;
+
+      label .@{c7n-pro-prefix}-select {
+        border-color: @pagination-size-changer-editable-border-color;
+      }
+    }
+
+    .@{c7n-pro-prefix}-pagination-pager.@{c7n-pro-prefix}-btn-wrapper {
+      display: inline-block;
+      vertical-align: middle;
+      width: auto !important;
+      min-width: @pagination-pager-btn-min-width !important;
+      height: @pagination-pager-btn-height;
+      font-size: @font-size-sm;
+      border-radius: @input-border-radius;
+    }
+
+    .@{c7n-pro-prefix}-pagination-pager.@{c7n-pro-prefix}-btn-icon-only {
+      line-height: 0;
+      padding: 0 0.04rem;
+      background: @component-background;
+      color: @pagination-pager-btn-color;
+      border: @border-width-base @border-style-base @pagination-pager-btn-border-color;
+    }
+
+    .@{c7n-pro-prefix}-pagination-pager:not(.@{c7n-pro-prefix}-btn-icon-only) {
+      line-height: @pagination-pager-btn-height;
+      padding: 0 0.08rem;
+      background: @component-background;
+      color: @pagination-pager-btn-color;
+      border: @border-width-base @border-style-base @pagination-pager-btn-border-color;
+    }
+
+    .@{c7n-pro-prefix}-btn-primary.@{c7n-pro-prefix}-btn-raised.@{c7n-pro-prefix}-pagination-pager {
+      color: rgb(255, 255, 255);
+      background-color: rgb(8, 64, 248);
+      border-color: rgb(8, 64, 248);
+    }
+
+    .@{c7n-pro-prefix}-pagination-pager {
+      min-width: @pagination-pager-btn-min-width;
+      height: @pagination-pager-btn-height;
+
+      .icon {
+        line-height: 1;
+        font-size: @font-size-sm;
+      }
+    }
+  }
+}
+
+// Table pagination wrapper
+.@{c7n-pro-prefix}-table-pagination {
+  margin: 0.1rem 0 0;
+  text-align: right;
+
+  .@{c7n-pro-prefix}-select-wrapper {
+    text-align: start;
+  }
+}
+
+// Button spacing in pagination
+.@{c7n-pro-prefix}-btn + .@{c7n-pro-prefix}-btn:not(.@{c7n-pro-prefix}-btn-block) {
+  margin-left: 0.1rem;
+}

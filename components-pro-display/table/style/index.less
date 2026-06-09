@@ -1,0 +1,179 @@
+// Pro-Display Table styles — self-contained.
+// Derived from components-pro/table/style/index.less (core table: cell, header, row, border).
+// Merges: display-query-bar-layout.less for professional query bar layout.
+
+@import '../../style/themes/default';
+
+@table-prefix-cls: ~'@{c7n-pro-prefix}-table';
+@form-prefix-cls: ~'@{c7n-pro-prefix}-form';
+@field-prefix-cls: ~'@{c7n-pro-prefix}-field';
+@input-prefix-cls: ~'@{c7n-pro-prefix}-input';
+
+// ========== Core table styles ==========
+
+.@{table-prefix-cls} {
+  position: relative;
+
+  &-wrapper {
+    overflow: auto;
+  }
+
+  &-content {
+    overflow: auto;
+  }
+
+  &-header {
+    margin-bottom: 0.1rem;
+    font-weight: 500;
+    font-size: @font-size-base;
+  }
+
+  table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: separate;
+    text-align: left;
+    border-radius: @border-radius-base @border-radius-base 0 0;
+  }
+
+  &-thead > tr > th {
+    position: relative;
+    padding: @table-cell-padding-vertical-base @table-cell-padding-horizontal-base;
+    overflow-wrap: break-word;
+    color: @table-header-color;
+    font-weight: @table-header-font-weight;
+    white-space: nowrap;
+    background: @table-header-bg;
+    border-bottom: @table-cell-border-bottom;
+    transition: background @animation-duration-slow ease;
+
+    .@{table-prefix-cls}-cell-inner {
+      padding: @table-padding-vertical @table-padding-horizontal;
+    }
+  }
+
+  &-tbody > tr > td {
+    padding: @table-cell-padding-vertical-base @table-cell-padding-horizontal-base;
+    overflow-wrap: break-word;
+    border-bottom: @table-cell-border-bottom;
+    transition: background @animation-duration-slow ease;
+
+    .@{table-prefix-cls}-cell-inner {
+      padding: @table-padding-vertical @table-padding-horizontal;
+    }
+  }
+
+  &-tbody > tr:last-child > td {
+    border-bottom: @table-last-row-cell-border-bottom;
+  }
+
+  &-tbody > tr:hover > td {
+    background: @table-row-hover-bg;
+  }
+
+  &-cell {
+    &-align-left {
+      text-align: left;
+    }
+    &-align-center {
+      text-align: center;
+    }
+    &-align-right {
+      text-align: right;
+    }
+  }
+
+  // Bordered table
+  &-bordered {
+    border: @table-outermost-bordered-border-left;
+    border-top: @table-outermost-border-top;
+
+    .@{table-prefix-cls}-thead > tr > th,
+    .@{table-prefix-cls}-tbody > tr > td {
+      border-right: @table-outermost-bordered-border-right;
+    }
+  }
+
+  // Empty state
+  &-empty {
+    padding: 0.32rem 0;
+    color: @disabled-color;
+    text-align: center;
+  }
+
+  // Loading state
+  &-spin {
+    position: relative;
+    min-height: 1rem;
+  }
+
+  // ========== Professional query bar ==========
+
+  &-professional-query-bar {
+    display: flex;
+    align-items: flex-start;
+    padding: 0.06rem 0;
+
+    .@{form-prefix-cls} {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .@{field-prefix-cls}-label,
+    .@{field-prefix-cls}-wrapper {
+      .@{c7n-pro-prefix}-checkbox-wrapper {
+        height: @input-height-base;
+      }
+    }
+
+    .@{field-prefix-cls}-wrapper {
+      .@{input-prefix-cls}-wrapper {
+        width: 100%;
+      }
+    }
+
+    &-button {
+      display: inline-flex;
+      flex-grow: 1;
+      flex-shrink: 0;
+      align-items: flex-start;
+      justify-content: flex-end;
+      width: 2.58rem;
+      padding: @table-professional-query-button-padding;
+
+      &-vertical {
+        padding: @table-professional-query-button-vertical-padding;
+      }
+
+      > * + * {
+        margin-left: @btn-group-spacing;
+      }
+
+      span {
+        display: inline-flex;
+        align-items: center;
+        vertical-align: baseline;
+      }
+    }
+  }
+
+  &-professional-toolbar {
+    .@{table-prefix-cls}-toolbar {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      padding-bottom: 0.1rem;
+      overflow: hidden;
+
+      &-button-group {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .@{table-prefix-cls}-summary-group-wrapper {
+        margin: 0;
+      }
+    }
+  }
+}

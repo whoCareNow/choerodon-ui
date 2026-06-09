@@ -1,0 +1,219 @@
+// Pro-Display TextField styles — self-contained.
+// Derived from components-pro/text-field/style/mixin.less (.input mixin).
+// Input wrapper, border, sizing, prefix/suffix, placeholder.
+
+@import '../../style/themes/default';
+
+@field-label-prefix-cls: ~'@{c7n-pro-prefix}-field-label';
+@form-item-group-prefix-cls: ~'@{c7n-pro-prefix}-form-item-group';
+
+.@{c7n-pro-prefix}-input {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  height: @input-height-base;
+  padding: @input-padding-vertical-base @input-padding-horizontal;
+  color: @input-color;
+  font-weight: @input-font-weight-base;
+  font-size: @input-font-size-base;
+  line-height: @input-line-height-base;
+  background-color: transparent;
+  background-image: none;
+  border: @border-width-base none @input-border-color;
+  border-radius: @input-border-radius;
+  cursor: text;
+  transition-duration: @animation-duration-slow;
+  transition-property: opacity, color, background-color, border;
+
+  &:placeholder-shown {
+    color: @input-placeholder-color;
+    text-overflow: ellipsis;
+  }
+
+  // Firefox
+  &::-moz-placeholder {
+    color: @input-placeholder-color;
+    -webkit-text-fill-color: @input-placeholder-color;
+    text-align: left;
+    opacity: 1;
+  }
+  // Internet Explorer 10+
+  &:-ms-input-placeholder {
+    color: @input-placeholder-color;
+    -webkit-text-fill-color: @input-placeholder-color;
+    text-align: left;
+  }
+  // Safari and Chrome
+  &::-webkit-input-placeholder {
+    color: @input-placeholder-color;
+    -webkit-text-fill-color: @input-placeholder-color;
+    text-align: left;
+  }
+
+  // wrapper
+  &-wrapper {
+    position: relative;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    background-color: @input-wrapper-bg;
+    border-radius: @input-wrapper-border-radius;
+
+    label {
+      position: relative;
+      z-index: 1;
+      display: flex;
+    }
+
+    .@{field-label-prefix-cls} {
+      z-index: -1;
+    }
+  }
+
+  // border variant
+  &-border &,
+  &-border&-float-label::before {
+    border-style: @border-style-base;
+  }
+
+  &-wrapper:not(&-border) & {
+    box-shadow: none !important;
+  }
+
+  // focus
+  &:focus,
+  &-focused & {
+    color: @input-active-color;
+    border-color: @input-focus-border-color;
+    outline: 0;
+    box-shadow: @input-active-box-shadow;
+  }
+
+  // hover
+  label:hover &,
+  &:hover {
+    border-color: @input-hover-border-color;
+  }
+
+  // not editable
+  &-not-editable & {
+    cursor: default;
+  }
+
+  // Size: lg
+  &-lg & {
+    height: @input-height-lg;
+    padding: @input-padding-vertical-lg @input-padding-horizontal;
+  }
+  // Size: sm
+  &-sm & {
+    height: @input-height-sm;
+    padding: @input-padding-vertical-sm @input-padding-horizontal;
+  }
+
+  // Reset height for textarea
+  textarea& {
+    max-width: 100%;
+    height: auto;
+    vertical-align: bottom;
+  }
+
+  // prefix / suffix
+  &-prefix,
+  &-suffix,
+  &-inner-button {
+    position: absolute;
+    top: 0.01rem;
+    bottom: 0.01rem;
+    z-index: 1;
+    height: @input-suffix-height;
+    margin: auto 0;
+    line-height: 1;
+    text-align: center;
+  }
+
+  &-prefix,
+  &-suffix {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-prefix {
+    left: 0.01rem;
+    width: @input-prefix-width-base;
+    color: @input-prefix-color;
+  }
+
+  &-suffix {
+    width: @input-suffix-width-base;
+    color: @input-suffix-color;
+  }
+
+  &-suffix,
+  &-inner-button {
+    right: 0.01rem;
+  }
+
+  &-prefix-button &-placeholder,
+  &-prefix-button &-rendered-value {
+    padding-left: @input-prefix-width-base;
+  }
+
+  &-suffix-button &-placeholder,
+  &-suffix-button &-rendered-value {
+    padding-right: @input-suffix-width-base;
+  }
+
+  &-suffix-button &-suffix {
+    cursor: pointer;
+  }
+
+  &:not(textarea):not(:last-child) {
+    padding-right: @input-suffix-width-base;
+  }
+
+  &:not(textarea):not(:first-child) {
+    padding-left: @input-prefix-width-base;
+  }
+
+  &-inner-button {
+    z-index: 1;
+    width: @input-button-width;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity @animation-duration-slow;
+  }
+
+  &-wrapper:hover &-inner-button,
+  &-focused &-inner-button {
+    z-index: 2;
+    opacity: 1;
+  }
+
+  &-wrapper:not(&-disabled):hover &-suffix .icon,
+  &-wrapper&-focused &-suffix .icon {
+    color: @input-suffix-hover-color;
+  }
+
+  // clear button
+  &-clear-button {
+    background: transparent;
+
+    &:hover {
+      color: @input-hover-border-color;
+    }
+
+    &:active {
+      color: @input-focus-border-color;
+    }
+  }
+
+  &-empty &-clear-button {
+    display: none;
+
+    & + * {
+      opacity: 1 !important;
+    }
+  }
+}

@@ -18,7 +18,7 @@ const FormContext = createContext<FormContextValue>({
   labelLayout: LabelLayout.horizontal,
   labelWidth: 100,
   labelAlign: LabelAlign.right,
-  useColon: false,
+  useColon: true,
   requiredMarkAlign: RequiredMarkAlign.left,
   disabled: false,
   columns: 1,

@@ -1,3 +1,4 @@
+import './index.less';
 import '../icon/style';
 import '../button/style';
 import '../form/style';

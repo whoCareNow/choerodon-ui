@@ -1,1 +1,1 @@
-import '../../../components-pro/text-field/style/index.less';
+import './index.less';
