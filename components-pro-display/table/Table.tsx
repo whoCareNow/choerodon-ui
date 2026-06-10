@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
 import isFunction from 'lodash/isFunction';
 import Spin from '../primitives/Spin';
@@ -6,7 +6,7 @@ import { useDisplayConfig } from '../_util/DisplayConfigContext';
 import useProPrefix from '../_util/useProPrefix';
 import ProfessionalQueryBar from './query-bar/ProfessionalQueryBar';
 import Pagination from '../pagination/Pagination';
-import { TableProps } from './interface';
+import { TableAutoHeightConfig, TableAutoHeightType, TableProps } from './interface';
 
 function getCellValue<T>(record: T, dataIndex?: string): any {
   if (!dataIndex) {
@@ -61,11 +61,45 @@ const Table: DisplayTableType = <T,>(props: TableProps<T>) => {
     onQuery,
     onReset,
     pagination,
+    autoHeight,
   } = props;
 
   const { getConfig } = useDisplayConfig();
   const prefixCls = useProPrefix('table');
   const spinPrefix = getConfig('prefixCls');
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [bodyHeight, setBodyHeight] = useState<number | undefined>();
+
+  const autoHeightConfig = useMemo<TableAutoHeightConfig | undefined>(() => {
+    if (!autoHeight) return undefined;
+    if (typeof autoHeight === 'object') {
+      return { type: autoHeight.type, diff: autoHeight.diff ?? 80 };
+    }
+    return { type: TableAutoHeightType.minHeight, diff: 80 };
+  }, [autoHeight]);
+
+  const calcAutoHeight = useCallback(() => {
+    if (!wrapperRef.current || !autoHeightConfig) return;
+    const parent = wrapperRef.current.parentElement;
+    if (!parent) return;
+    const parentHeight = parent.clientHeight;
+    const h = parentHeight - autoHeightConfig.diff;
+    setBodyHeight(h > 0 ? h : 0);
+  }, [autoHeightConfig]);
+
+  useEffect(() => {
+    if (!autoHeightConfig) {
+      setBodyHeight(undefined);
+      return;
+    }
+    calcAutoHeight();
+    const parent = wrapperRef.current?.parentElement;
+    if (!parent) return;
+    const ro = new ResizeObserver(calcAutoHeight);
+    ro.observe(parent);
+    return () => ro.disconnect();
+  }, [autoHeightConfig, calcAutoHeight]);
 
   const queryBarNode = useMemo(() => {
     if (queryBar && queryBar !== 'professionalBar' && typeof queryBar !== 'string') {
@@ -125,7 +159,19 @@ const Table: DisplayTableType = <T,>(props: TableProps<T>) => {
     <div className={classNames(prefixCls, className)} style={style}>
       {queryBarNode}
       {title && <div className={`${prefixCls}-header`}>{title}</div>}
-      <div className={classNames(`${prefixCls}-wrapper`, { [`${prefixCls}-bordered`]: bordered })}>
+      <div
+        ref={wrapperRef}
+        className={classNames(`${prefixCls}-wrapper`, { [`${prefixCls}-bordered`]: bordered })}
+        style={autoHeightConfig && bodyHeight !== undefined
+          ? {
+            ...(autoHeightConfig.type === TableAutoHeightType.maxHeight
+              ? { maxHeight: bodyHeight }
+              : { height: bodyHeight }),
+            overflow: 'auto',
+          }
+          : undefined
+        }
+      >
         <div className={`${prefixCls}-content`}>
           <div className={`${prefixCls}-content-inner`}>
             <table>

@@ -13,6 +13,8 @@
 
 .@{table-prefix-cls} {
   position: relative;
+  // autoHeight 模式下需要撑满父容器，使 calc(100% - diff) 可正确计算
+  height: 100%;
 
   &-wrapper {
     overflow: auto;

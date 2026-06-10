@@ -4,6 +4,16 @@ import { ProfessionalQueryBarProps } from './query-bar/ProfessionalQueryBar';
 
 export type TableQueryBarType = 'professionalBar' | ReactNode;
 
+export enum TableAutoHeightType {
+  maxHeight = 'maxHeight',
+  minHeight = 'minHeight',
+}
+
+export interface TableAutoHeightConfig {
+  type: TableAutoHeightType;
+  diff?: number;
+}
+
 export interface ColumnType<T = any> {
   key?: string;
   title?: ReactNode;
@@ -33,4 +43,6 @@ export interface TableProps<T = any> extends Omit<ProfessionalQueryBarProps, 'cl
   queryBarProps?: Partial<ProfessionalQueryBarProps>;
   /** 内置分页器，传 `false` 关闭 */
   pagination?: TablePaginationConfig | false;
+  /** 自适应高度：`true` 等同于 `{ type: 'minHeight', diff: 80 }` */
+  autoHeight?: boolean | TableAutoHeightConfig;
 }
