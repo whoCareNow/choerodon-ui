@@ -176,6 +176,7 @@
               total,
               page,
               pageSize,
+              showPager:'input',
               showSizeChangerLabel: false,
               paginationShowSizeChangerLabel: false,
               onChange: (nextPage, nextSize) => runQuery(nextPage, nextSize),
@@ -189,6 +190,7 @@
               setRoleName(defaultQueryBody.roleName);
               runQuery(1, pageSize, defaultQueryBody);
             }}
+            rowHeight={26}
             autoQueryAfterReset={false}
           />
         );
