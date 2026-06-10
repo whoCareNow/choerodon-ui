@@ -51,7 +51,7 @@
 
   <script type="text/babel">
     try {
-      const { Form, Table, TextField } = getChoerodonProDisplay();
+      const { Form, Table, TextField,Button } = getChoerodonProDisplay();
       const { useCallback, useMemo, useState } = React;
 
       const PAGE_SIZE = 10;
@@ -168,7 +168,10 @@
             rowKey="permissionId"
             loading={loading}
             bordered
-            autoHeight={{ type: 'minHeight', diff: 100 }}
+            buttons={[
+              <Button funcType="flat">1</Button>
+            ]}
+            autoHeight={{ type: 'minHeight', diff: 130 }}
             pagination={{
               total,
               page,
