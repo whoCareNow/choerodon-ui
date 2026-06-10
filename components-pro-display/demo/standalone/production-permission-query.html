@@ -1,17 +1,39 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pro Display UMD — 生产权限查询</title>
   <link rel="stylesheet" href="../../../dist/choerodon-ui-pro-display.min.css" />
   <style>
-    body { margin: 0; padding: 12px; background: #f5f5f5; }
-    h1 { font-size: 18px; margin: 0 0 8px; }
-    .hint { color: rgba(0,0,0,.45); margin: 0 0 16px; line-height: 1.6; max-width: 720px; }
-    #root { background: #fff; padding: 16px; border-radius: 2px; height: calc(100vh - 120px); }
+    body {
+      margin: 0;
+      padding: 12px;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0 0 8px;
+    }
+
+    .hint {
+      color: rgba(0, 0, 0, .45);
+      margin: 0 0 16px;
+      line-height: 1.6;
+      max-width: 720px;
+    }
+
+    #root {
+      background: #fff;
+      padding: 16px;
+      border-radius: 2px;
+      height: calc(100vh - 120px);
+    }
   </style>
 </head>
+
 <body>
   <h1>Pro Display UMD Demo</h1>
   <p class="hint">
@@ -29,144 +51,152 @@
 
   <script type="text/babel">
     try {
-    const { Form, Table, TextField } = getChoerodonProDisplay();
-    const { useCallback, useMemo, useState } = React;
+      const { Form, Table, TextField } = getChoerodonProDisplay();
+      const { useCallback, useMemo, useState } = React;
 
-    const PAGE_SIZE = 10;
-    const MOCK_ALL = [
-      {
-        permissionId: 1027001,
-        formFactor: '111',
-        type: '2',
-        roleCode: 'businessManager',
-        roleName: '业务管理员',
-        enableFlagMeaning: '是',
-        creationDate: '2026-03-24 19:49:46',
-        lastUpdateDate: '2026-04-27 10:51:25',
-      },
-      {
-        permissionId: 1027002,
-        formFactor: '111',
-        type: '2',
-        roleCode: 'planner',
-        roleName: '计划员',
-        enableFlagMeaning: '是',
-        creationDate: '2026-03-20 10:00:00',
-        lastUpdateDate: '2026-04-01 09:30:00',
-      },
-      {
-        permissionId: 1027003,
-        formFactor: '112',
-        type: '2',
-        roleCode: 'businessManager',
-        roleName: '业务管理员',
-        enableFlagMeaning: '否',
-        creationDate: '2026-02-15 14:20:00',
-        lastUpdateDate: '2026-03-10 11:00:00',
-      },
-    ];
+      const PAGE_SIZE = 10;
+      const MOCK_ALL = [
+        {
+          permissionId: 1027001,
+          formFactor: '111',
+          type: '2',
+          roleCode: 'businessManager',
+          roleName: '业务管理员',
+          enableFlagMeaning: '是',
+          creationDate: '2026-03-24 19:49:46',
+          lastUpdateDate: '2026-04-27 10:51:25',
+        },
+        {
+          permissionId: 1027002,
+          formFactor: '111',
+          type: '2',
+          roleCode: 'planner',
+          roleName: '计划员',
+          enableFlagMeaning: '是',
+          creationDate: '2026-03-20 10:00:00',
+          lastUpdateDate: '2026-04-01 09:30:00',
+        },
+        {
+          permissionId: 1027003,
+          formFactor: '112',
+          type: '2',
+          roleCode: 'businessManager',
+          roleName: '业务管理员',
+          enableFlagMeaning: '否',
+          creationDate: '2026-02-15 14:20:00',
+          lastUpdateDate: '2026-03-10 11:00:00',
+        },
+      ];
 
-    function mockQuery(page, size, body) {
-      const list = MOCK_ALL.filter(row => {
-        if (body.formFactor && row.formFactor !== body.formFactor) return false;
-        if (body.type && row.type !== body.type) return false;
-        if (body.roleName && row.roleName.indexOf(body.roleName) < 0) return false;
-        return true;
-      });
-      const totalElements = list.length;
-      const totalPages = totalElements === 0 ? 0 : Math.ceil(totalElements / size);
-      const number = totalPages === 0 ? 0 : Math.min(page, totalPages - 1);
-      const start = number * size;
-      const content = list.slice(start, start + size);
-      return { success: true, rows: { totalElements, totalPages, number, content } };
-    }
+      function mockQuery(page, size, body) {
+        const list = MOCK_ALL.filter(row => {
+          if (body.formFactor && row.formFactor !== body.formFactor) return false;
+          if (body.type && row.type !== body.type) return false;
+          if (body.roleName && row.roleName.indexOf(body.roleName) < 0) return false;
+          return true;
+        });
+        const totalElements = list.length;
+        const totalPages = totalElements === 0 ? 0 : Math.ceil(totalElements / size);
+        const number = totalPages === 0 ? 0 : Math.min(page, totalPages - 1);
+        const start = number * size;
+        const content = list.slice(start, start + size);
+        return { success: true, rows: { totalElements, totalPages, number, content } };
+      }
 
-    function App() {
-      const [formFactor, setFormFactor] = useState('111');
-      const [type, setType] = useState('2');
-      const [roleName, setRoleName] = useState('业务管理员');
-      const [page, setPage] = useState(1);
-      const [pageSize, setPageSize] = useState(PAGE_SIZE);
-      const [loading, setLoading] = useState(false);
-      const [total, setTotal] = useState(0);
-      const [dataSource, setDataSource] = useState([]);
+      function App() {
+        const [formFactor, setFormFactor] = useState('111');
+        const [type, setType] = useState('2');
+        const [roleName, setRoleName] = useState('业务管理员');
+        const [page, setPage] = useState(1);
+        const [pageSize, setPageSize] = useState(PAGE_SIZE);
+        const [loading, setLoading] = useState(false);
+        const [total, setTotal] = useState(0);
+        const [dataSource, setDataSource] = useState([]);
 
-      const defaultQueryBody = { formFactor: '111', type: '2', roleName: '业务管理员' };
+        const defaultQueryBody = { formFactor: '111', type: '2', roleName: '业务管理员' };
 
-      const runQuery = useCallback((nextPage, nextPageSize, bodyOverride) => {
-        setLoading(true);
-        const size = nextPageSize == null ? pageSize : nextPageSize;
-        const body = bodyOverride || {
-          formFactor: formFactor.trim(),
-          type: type.trim(),
-          roleName: roleName.trim(),
-        };
-        const pageIndex = (nextPage == null ? page : nextPage) - 1;
-        const res = mockQuery(pageIndex, size, body);
-        if (res.success) {
-          setDataSource(res.rows.content);
-          setTotal(res.rows.totalElements);
-          setPage(res.rows.number + 1);
-          setPageSize(size);
+        const runQuery = useCallback((nextPage, nextPageSize, bodyOverride) => {
+          setLoading(true);
+          const size = nextPageSize == null ? pageSize : nextPageSize;
+          const body = bodyOverride || {
+            formFactor: formFactor.trim(),
+            type: type.trim(),
+            roleName: roleName.trim(),
+          };
+          const pageIndex = (nextPage == null ? page : nextPage) - 1;
+          const res = mockQuery(pageIndex, size, body);
+          if (res.success) {
+            setDataSource(res.rows.content);
+            setTotal(res.rows.totalElements);
+            setPage(res.rows.number + 1);
+            setPageSize(size);
+          }
+          setLoading(false);
+        }, [formFactor, page, pageSize, roleName]);
+
+        React.useEffect(() => {
+          runQuery(1, PAGE_SIZE, defaultQueryBody);
+        }, []);
+
+        const queryFields = useMemo(() => [
+          <TextField key="formFactor" label="formFactor" value={formFactor} onChange={e => setFormFactor(e.target.value)} />,
+          <TextField key="type" label="type" value={type} onChange={e => setType(e.target.value)} />,
+          <TextField key="roleName" label="roleName" value={roleName} onChange={e => setRoleName(e.target.value)} />,
+        ], [formFactor, type, roleName]);
+
+        const columns = useMemo(() => [
+          { title: 'formFactor', dataIndex: 'formFactor', width: 100 },
+          { title: 'type', dataIndex: 'type', width: 72 },
+          { title: '角色编码', dataIndex: 'roleCode' },
+          { title: '角色名称', dataIndex: 'roleName' },
+          { title: '是否启用', dataIndex: 'enableFlagMeaning', width: 88 },
+          { title: '创建时间', dataIndex: 'creationDate', width: 168 },
+          { title: '更新时间', dataIndex: 'lastUpdateDate', width: 168 },
+        ], []);
+
+        function sizeChangerRenderer({ text }) {
+          return `${text} 条`;
         }
-        setLoading(false);
-      }, [formFactor, page, pageSize, roleName]);
 
-      React.useEffect(() => {
-        runQuery(1, PAGE_SIZE, defaultQueryBody);
-      }, []);
+        return (
+          <Table
+            queryBar="professionalBar"
+            queryFields={queryFields}
+            queryFieldsLimit={3}
+            columns={columns}
+            dataSource={dataSource}
+            rowKey="permissionId"
+            loading={loading}
+            bordered
+            autoHeight={{ type: 'minHeight', diff: 100 }}
+            pagination={{
+              total,
+              page,
+              pageSize,
+              showSizeChangerLabel: false,
+              paginationShowSizeChangerLabel: false,
+              onChange: (nextPage, nextSize) => runQuery(nextPage, nextSize),
+              sizeChangerOptionRenderer: sizeChangerRenderer,
+              showTotal:(total, range) => `共${total}条`
+            }}
+            onQuery={() => runQuery(1, pageSize)}
+            onReset={() => {
+              setFormFactor(defaultQueryBody.formFactor);
+              setType(defaultQueryBody.type);
+              setRoleName(defaultQueryBody.roleName);
+              runQuery(1, pageSize, defaultQueryBody);
+            }}
+            autoQueryAfterReset={false}
+          />
+        );
+      }
 
-      const queryFields = useMemo(() => [
-        <TextField key="formFactor" label="formFactor" value={formFactor} onChange={e => setFormFactor(e.target.value)} />,
-        <TextField key="type" label="type" value={type} onChange={e => setType(e.target.value)} />,
-        <TextField key="roleName" label="roleName" value={roleName} onChange={e => setRoleName(e.target.value)} />,
-      ], [formFactor, type, roleName]);
-
-      const columns = useMemo(() => [
-        { title: '权限ID', dataIndex: 'permissionId', width: 100 },
-        { title: 'formFactor', dataIndex: 'formFactor', width: 100 },
-        { title: 'type', dataIndex: 'type', width: 72 },
-        { title: '角色编码', dataIndex: 'roleCode' },
-        { title: '角色名称', dataIndex: 'roleName' },
-        { title: '是否启用', dataIndex: 'enableFlagMeaning', width: 88 },
-        { title: '创建时间', dataIndex: 'creationDate', width: 168 },
-        { title: '更新时间', dataIndex: 'lastUpdateDate', width: 168 },
-      ], []);
-
-      return (
-        <Table
-          queryBar="professionalBar"
-          queryFields={queryFields}
-          queryFieldsLimit={3}
-          columns={columns}
-          dataSource={dataSource}
-          rowKey="permissionId"
-          loading={loading}
-          bordered
-          autoHeight={{ type: 'minHeight', diff: 100 }}
-          pagination={{
-            total,
-            page,
-            pageSize,
-            onChange: (nextPage, nextSize) => runQuery(nextPage, nextSize),
-          }}
-          onQuery={() => runQuery(1, pageSize)}
-          onReset={() => {
-            setFormFactor(defaultQueryBody.formFactor);
-            setType(defaultQueryBody.type);
-            setRoleName(defaultQueryBody.roleName);
-            runQuery(1, pageSize, defaultQueryBody);
-          }}
-          autoQueryAfterReset={false}
-        />
-      );
-    }
-
-    ReactDOM.render(<App />, document.getElementById('root'));
+      ReactDOM.render(<App />, document.getElementById('root'));
     } catch (err) {
       document.getElementById('root').innerHTML = '<pre style="color:#cf1322;white-space:pre-wrap">' + err.message + '</pre>';
       console.error(err);
     }
   </script>
 </body>
+
 </html>

@@ -18,10 +18,11 @@ export interface PaginationProps {
   pageSizeOptions?: string[];
   showSizeChanger?: boolean;
   showSizeChangerLabel?: boolean;
-  showTotal?: boolean;
+  showTotal?: boolean | ((total: number, range: [number, number]) => ReactNode);
   showPager?: boolean;
   hideOnSinglePage?: boolean;
   sizeChangerPosition?: SizeChangerPosition;
+  sizeChangerOptionRenderer?: (option: { text: string; value: string }) => ReactNode;
   className?: string;
   disabled?: boolean;
 }
@@ -60,6 +61,7 @@ const Pagination: React.FunctionComponent<PaginationProps> = props => {
     showPager = true,
     hideOnSinglePage = false,
     sizeChangerPosition = SizeChangerPosition.left,
+    sizeChangerOptionRenderer,
     className,
     disabled = false,
   } = props;
@@ -164,7 +166,9 @@ const Pagination: React.FunctionComponent<PaginationProps> = props => {
     >
       {pageSizeOptions.map(option => (
         <Option key={option} value={option}>
-          {option}
+          {sizeChangerOptionRenderer
+            ? sizeChangerOptionRenderer({ text: option, value: option })
+            : option}
         </Option>
       ))}
     </Select>
@@ -191,7 +195,9 @@ const Pagination: React.FunctionComponent<PaginationProps> = props => {
       {sizeChangerPosition === SizeChangerPosition.left && sizeChangerNode}
       {showTotal && (
         <span key="total" className={`${prefixCls}-page-info`}>
-          {from} - {to} / {total}
+          {typeof showTotal === 'function'
+            ? showTotal(total, [from, to])
+            : `${from} - ${to} / ${total}`}
         </span>
       )}
       {isShowFirstAndLast && renderPager(1, 'first', false, currentPage === 1)}
