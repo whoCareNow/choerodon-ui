@@ -161,7 +161,7 @@ const Table: DisplayTableType = <T,>(props: TableProps<T>) => {
       {title && <div className={`${prefixCls}-header`}>{title}</div>}
       <div
         ref={wrapperRef}
-        className={classNames(`${prefixCls}-wrapper`, { [`${prefixCls}-bordered`]: bordered })}
+        className={classNames(`${prefixCls}-wrapper`, { [`${prefixCls}-wrapper-bordered`]: bordered })}
         style={autoHeightConfig && bodyHeight !== undefined
           ? {
             ...(autoHeightConfig.type === TableAutoHeightType.maxHeight
