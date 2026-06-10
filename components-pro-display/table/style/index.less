@@ -16,6 +16,17 @@
 
   &-wrapper {
     overflow: auto;
+
+    // Bordered table
+    &-bordered {
+      border: @table-outermost-bordered-border-left;
+      border-top: @table-outermost-border-top;
+
+      .@{table-prefix-cls}-thead > tr > th,
+      .@{table-prefix-cls}-tbody > tr > td {
+        border-right: @table-outermost-bordered-border-right;
+      }
+    }
   }
 
   &-content {
@@ -80,17 +91,6 @@
     }
     &-align-right {
       text-align: right;
-    }
-  }
-
-  // Bordered table
-  &-bordered {
-    border: @table-outermost-bordered-border-left;
-    border-top: @table-outermost-border-top;
-
-    .@{table-prefix-cls}-thead > tr > th,
-    .@{table-prefix-cls}-tbody > tr > td {
-      border-right: @table-outermost-bordered-border-right;
     }
   }
 

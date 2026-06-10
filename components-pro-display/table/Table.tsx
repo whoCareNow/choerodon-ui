@@ -122,10 +122,10 @@ const Table: DisplayTableType = <T,>(props: TableProps<T>) => {
   );
 
   const tableNode = (
-    <div className={classNames(prefixCls, className, { [`${prefixCls}-bordered`]: bordered })} style={style}>
+    <div className={classNames(prefixCls, className)} style={style}>
       {queryBarNode}
       {title && <div className={`${prefixCls}-header`}>{title}</div>}
-      <div className={`${prefixCls}-wrapper`}>
+      <div className={classNames(`${prefixCls}-wrapper`, { [`${prefixCls}-bordered`]: bordered })}>
         <div className={`${prefixCls}-content`}>
           <div className={`${prefixCls}-content-inner`}>
             <table>
